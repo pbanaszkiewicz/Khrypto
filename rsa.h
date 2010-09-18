@@ -109,6 +109,8 @@ void key_generation(int length) {
 
 // using PKCS#1 v2.1
 // fuck it's hard
+// http://tools.ietf.org/html/rfc3447#page-6
+// http://www.di-mgt.com.au/rsa_alg.html#pkcs1schemes
 void encrypt() {
 
 }
