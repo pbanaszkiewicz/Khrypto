@@ -76,12 +76,12 @@
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList">
-    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-3UoRpMNKcQ,guid=1e03396c74b8b1c155497b720000001d</value>
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-nBamJj9SJK,guid=94ab77805f0c53d3122ffcc2000000c8</value>
     <value type="QString">DERBY_HOME=/opt/java/db</value>
     <value type="QString">DESKTOP_SESSION=kde</value>
     <value type="QString">DISPLAY=:0.0</value>
     <value type="QString">DM_CONTROL=/var/run/xdmctl</value>
-    <value type="QString">GPG_AGENT_INFO=/tmp/gpg-otII1Y/S.gpg-agent:4180:1</value>
+    <value type="QString">GPG_AGENT_INFO=/tmp/gpg-ngz0G5/S.gpg-agent:4198:1</value>
     <value type="QString">GREP_OPTIONS=-i --color=auto</value>
     <value type="QString">GS_LIB=/home/pbnan/.fonts</value>
     <value type="QString">GTK2_RC_FILES=/etc/gtk-2.0/gtkrc:/home/pbnan/.gtkrc-2.0:/home/pbnan/.gtkrc-2.0-kde4:/home/pbnan/.kde4/share/config/gtkrc-2.0</value>
@@ -117,11 +117,11 @@
     <value type="QString">QT_PLUGIN_PATH=/home/pbnan/.kde4/lib/kde4/plugins/:/usr/lib/kde4/plugins/</value>
     <value type="QString">QT_XFT=true</value>
     <value type="QString">SAVEHIST=1000</value>
-    <value type="QString">SESSION_MANAGER=local/jail:@/tmp/.ICE-unix/4230,unix/jail:/tmp/.ICE-unix/4230</value>
+    <value type="QString">SESSION_MANAGER=local/jail:@/tmp/.ICE-unix/4245,unix/jail:/tmp/.ICE-unix/4245</value>
     <value type="QString">SHELL=/bin/zsh</value>
     <value type="QString">SHLVL=1</value>
-    <value type="QString">SSH_AGENT_PID=4183</value>
-    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-kqViFK4182/agent.4182</value>
+    <value type="QString">SSH_AGENT_PID=4201</value>
+    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-kWjbhn4200/agent.4200</value>
     <value type="QString">USER=pbnan</value>
     <value type="QString">WINDOWPATH=7</value>
     <value type="QString">WORDCHARS=</value>
@@ -131,13 +131,13 @@
     <value type="QString">XDG_CONFIG_HOME=/home/pbnan/.config</value>
     <value type="QString">XDG_DATA_DIRS=/usr/share:/usr/local/share:/opt/kde/share</value>
     <value type="QString">XDG_DATA_HOME=/home/pbnan/.local/share</value>
-    <value type="QString">XDG_SESSION_COOKIE=e928d404b523d2705e3b3ac0499f02e0-1284837286.373521-1805579206</value>
+    <value type="QString">XDG_SESSION_COOKIE=e928d404b523d2705e3b3ac0499f02e0-1284877640.941727-605007928</value>
     <value type="QString">XDM_MANAGED=method=classic</value>
     <value type="QString">XINITRC=/home/pbnan/.xinitrc</value>
     <value type="QString">ZDOTDIR=/home/pbnan</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList">
-    <value type="QString">/home/pbnan/workspace/khrypto/khrypto.pro</value>
+    <value type="QString">/home/pbnan/workspace/pbnan-Khrypto/khrypto.pro</value>
     <value type="QString">-spec</value>
     <value type="QString">linux-g++</value>
     <value type="QString">-r</value>
@@ -145,7 +145,7 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString">/usr/bin/qmake</value>
    <value key="abstractProcess.enabled" type="bool">false</value>
-   <value key="abstractProcess.workingDirectory" type="QString">/home/pbnan/workspace/khrypto</value>
+   <value key="abstractProcess.workingDirectory" type="QString">/home/pbnan/workspace/pbnan-Khrypto</value>
   </valuemap>
  </data>
  <data>
@@ -153,12 +153,12 @@
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList">
-    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-3UoRpMNKcQ,guid=1e03396c74b8b1c155497b720000001d</value>
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-nBamJj9SJK,guid=94ab77805f0c53d3122ffcc2000000c8</value>
     <value type="QString">DERBY_HOME=/opt/java/db</value>
     <value type="QString">DESKTOP_SESSION=kde</value>
     <value type="QString">DISPLAY=:0.0</value>
     <value type="QString">DM_CONTROL=/var/run/xdmctl</value>
-    <value type="QString">GPG_AGENT_INFO=/tmp/gpg-otII1Y/S.gpg-agent:4180:1</value>
+    <value type="QString">GPG_AGENT_INFO=/tmp/gpg-ngz0G5/S.gpg-agent:4198:1</value>
     <value type="QString">GREP_OPTIONS=-i --color=auto</value>
     <value type="QString">GS_LIB=/home/pbnan/.fonts</value>
     <value type="QString">GTK2_RC_FILES=/etc/gtk-2.0/gtkrc:/home/pbnan/.gtkrc-2.0:/home/pbnan/.gtkrc-2.0-kde4:/home/pbnan/.kde4/share/config/gtkrc-2.0</value>
@@ -194,11 +194,11 @@
     <value type="QString">QT_PLUGIN_PATH=/home/pbnan/.kde4/lib/kde4/plugins/:/usr/lib/kde4/plugins/</value>
     <value type="QString">QT_XFT=true</value>
     <value type="QString">SAVEHIST=1000</value>
-    <value type="QString">SESSION_MANAGER=local/jail:@/tmp/.ICE-unix/4230,unix/jail:/tmp/.ICE-unix/4230</value>
+    <value type="QString">SESSION_MANAGER=local/jail:@/tmp/.ICE-unix/4245,unix/jail:/tmp/.ICE-unix/4245</value>
     <value type="QString">SHELL=/bin/zsh</value>
     <value type="QString">SHLVL=1</value>
-    <value type="QString">SSH_AGENT_PID=4183</value>
-    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-kqViFK4182/agent.4182</value>
+    <value type="QString">SSH_AGENT_PID=4201</value>
+    <value type="QString">SSH_AUTH_SOCK=/tmp/ssh-kWjbhn4200/agent.4200</value>
     <value type="QString">USER=pbnan</value>
     <value type="QString">WINDOWPATH=7</value>
     <value type="QString">WORDCHARS=</value>
@@ -208,7 +208,7 @@
     <value type="QString">XDG_CONFIG_HOME=/home/pbnan/.config</value>
     <value type="QString">XDG_DATA_DIRS=/usr/share:/usr/local/share:/opt/kde/share</value>
     <value type="QString">XDG_DATA_HOME=/home/pbnan/.local/share</value>
-    <value type="QString">XDG_SESSION_COOKIE=e928d404b523d2705e3b3ac0499f02e0-1284837286.373521-1805579206</value>
+    <value type="QString">XDG_SESSION_COOKIE=e928d404b523d2705e3b3ac0499f02e0-1284877640.941727-605007928</value>
     <value type="QString">XDM_MANAGED=method=classic</value>
     <value type="QString">XINITRC=/home/pbnan/.xinitrc</value>
     <value type="QString">ZDOTDIR=/home/pbnan</value>
@@ -219,7 +219,7 @@
    </valuelist>
    <value key="abstractProcess.command" type="QString">/usr/bin/make</value>
    <value key="abstractProcess.enabled" type="bool">true</value>
-   <value key="abstractProcess.workingDirectory" type="QString">/home/pbnan/workspace/khrypto</value>
+   <value key="abstractProcess.workingDirectory" type="QString">/home/pbnan/workspace/pbnan-Khrypto</value>
    <valuelist key="makeargs" type="QVariantList"/>
   </valuemap>
  </data>

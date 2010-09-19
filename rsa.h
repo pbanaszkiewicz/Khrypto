@@ -2,6 +2,7 @@
 #define RSA_H
 
 #include <cmath>
+#include <string>
 #include <vector>
 #include <cstdlib>
 #include <gmp.h>
@@ -21,20 +22,40 @@ int randomNumber(unsigned int limit) {
     return n;
 }
 
+//Converts integer into length-byte string representation, so for example:
+//int2str(1, 4) = "00000001"
+//int2str(123, 3) = "00007B"
+string int2str(mpz_t &i, unsigned int length) {
+    if (mpz_cmp_d(i, pow(256.0, (double) length)) >= 0) {
+        return string();
+    }
+
+    string a = mpz_get_str(NULL, 16, i);
+    if (length*2 > a.length()) {
+        string b(length*2 - a.length(), '0');
+        a = b + a;
+    }
+    return a;
+}
+
+// TODO: really not needed because of mpz_set_str()
+char* str2int(int i, int length);
+
 void key_generation(int length) {
-    mpz_t p, q;
+    mpz_t p, q, p1, q1;
     mpz_init2(p, length/2);
     mpz_init2(q, length/2);
+    mpz_init2(p1, length/2);
+    mpz_init2(q1, length/2);
 
     //generate a random number of bit, set two highest bits and one lowest
-    char p_tab[length/2];
-    p_tab[0] = p_tab[1] = p_tab[length/2 -1] = '1';
-    char q_tab[length/2];
-    q_tab[0] = q_tab[1] = q_tab[length/2 -1] = '1';
+    string p_tab(length/2, '1');
+    string q_tab(length/2, '1');
 
     //generating random bits
+    int r;
     for (int i=2; i<(length/2 -1); i++) {
-        int r = randomNumber(2);
+        r = randomNumber(2);
         if (r==0) p_tab[i]='0';
         else p_tab[i]='1';
 
@@ -43,8 +64,8 @@ void key_generation(int length) {
         else q_tab[i]='1';
     }
 
-    mpz_set_str(p, p_tab, 2);
-    mpz_set_str(q, q_tab, 2);
+    mpz_set_str(p, p_tab.c_str(), 2);
+    mpz_set_str(q, q_tab.c_str(), 2);
 
     //if p not prime, then +=2 and try again
     while ( mpz_probab_prime_p(p, 1000)==0 ) {
@@ -56,6 +77,7 @@ void key_generation(int length) {
     }
 
     //swap values if and only if p > q
+    //will be used later (see CRT - Chinese Remainder Theorem)
     if (mpz_cmp(p, q) < 0) {
         mpz_t tmp;
         mpz_init_set(tmp, p);
@@ -68,18 +90,20 @@ void key_generation(int length) {
     mpz_init2(n, length);
     mpz_init2(phi, length);
 
-    mpz_mul(n, p, q); //this is now modulus
+    //n:
+    mpz_mul(n, p, q);
 
-    //just temporary subtraction
-    mpz_sub_ui(p, p, 1);
-    mpz_sub_ui(q, q, 1);
-    mpz_mul(phi, p, q);
-    mpz_add_ui(p, p, 1);
-    mpz_add_ui(q, q, 1);
+    //p1 = p-1
+    //q1 = q-1
+    //will be useful later
+    mpz_sub_ui(p1, p, 1);
+    mpz_sub_ui(q1, q, 1);
+    mpz_mul(phi, p1, q1);
 
-    //calculating e: 1 < e < phi, gcd(e, phi) == 1
+    //e:
+    //1 < e < phi, gcd(e, phi) == 1
     mpz_t e, gcd;
-    mpz_inits(e, gcd);
+    mpz_inits(e, gcd, NULL);
     unsigned int gcd_tab[] = {65537, 17, 3};
     for (int i=0; i<3; i++) {
         mpz_gcd_ui(gcd, phi, gcd_tab[i]);
@@ -89,41 +113,54 @@ void key_generation(int length) {
         }
     }
 
-    if (mpz_cmp_ui(e, 0) == 0) {
-        //przekichane
-        //bo nie ma policzonego e
-        return;
-    }
+    //perhaps it's not ever going to happen
+    //so the comparision is not needed
+    //if (mpz_cmp_ui(e, 0) == 0) {
+    //    return;
+    //}
 
     mpz_t d, a; //"a" is just a hack, not used anywhere in algorithm
-    mpz_inits(d, a);
-    mpz_gcdext(gcd, d, a, e, phi);
+    mpz_inits(d, a, NULL);
 
-    mpz_clears(phi, p, q, gcd, a);
-    //now we have keys
-    //public one:
+    //d:
+    //probably redundant
+    mpz_gcdext(gcd, d, NULL, phi, e);
+    if (mpz_cmp_ui(d,0) < 0)
+        mpz_mod(d, d, phi);
+
+    //mpz_clears(phi, p, q, gcd, a);
+
+    mpz_t dP, dQ, qInv;
+    mpz_inits(dP, dQ, qInv, NULL);
+
+    //dP:
+    mpz_gcdext(gcd, dP, NULL, p1, e);
+    if (mpz_cmp_ui(dP, 0) < 0)
+        mpz_mod(dP, dP, p1);
+
+    //dQ:
+    mpz_gcdext(gcd, dQ, NULL, q1, e);
+    if (mpz_cmp_ui(dQ, 0) < 0)
+        mpz_mod(dQ, dQ, q1);
+
+    //qInv:
+    mpz_gcdext(gcd, qInv, NULL, p, q);
+    if (mpz_cmp_ui(qInv, 0) < 0)
+        mpz_mod(qInv, qInv, p);
+
+    //public key:
     //(n, e)
-    //private one:
-    //(n, d)
+    //private key:
+    //(n, d)  OR  (p, q, dP, dQ, qInv)
 }
 
-// using PKCS#1 v2.1
-// fuck it's hard
-// http://tools.ietf.org/html/rfc3447#page-6
+// using PKCS#1 v1.5 (http://tools.ietf.org/html/rfc2313)
+// it's easier than v2.1 (http://tools.ietf.org/html/rfc3447#page-6)
 // http://www.di-mgt.com.au/rsa_alg.html#pkcs1schemes
 void encrypt() {
 
 }
 
 void decrypt();
-
-struct Primes {
-    mpz_t a, b;
-};
-
-//n = p * q;
-//phi = (p-1)*(q-1)
-//wybranie liczby E (1 < e < phi), E względnie pierwsze z phi
-//wyliczenie jakiegoś d dziwnego ...
 
 #endif // RSA_H

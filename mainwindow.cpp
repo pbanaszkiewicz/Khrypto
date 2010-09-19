@@ -11,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    srand(time(NULL));
+
     //settings
     //schowaj co zbędne -> ładowanie kluczy etc
 
@@ -55,7 +57,7 @@ void MainWindow::code() {
             break;
         case 3: //RSA
             {
-            Primes r;
+            //Primes r;
             result = "";
             break;}
         case 4: //MD5
