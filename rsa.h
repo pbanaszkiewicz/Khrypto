@@ -104,7 +104,7 @@ void key_generation(int length) {
     //1 < e < phi, gcd(e, phi) == 1
     mpz_t e, gcd;
     mpz_inits(e, gcd, NULL);
-    unsigned int gcd_tab[] = {65537, 17, 3};
+    unsigned int gcd_tab[] = {3, 17, 65537};
     for (int i=0; i<3; i++) {
         mpz_gcd_ui(gcd, phi, gcd_tab[i]);
         if (mpz_cmp_ui(gcd, 1) == 0) {
@@ -124,7 +124,7 @@ void key_generation(int length) {
 
     //d:
     //probably redundant
-    mpz_gcdext(gcd, d, NULL, phi, e);
+    mpz_gcdext(gcd, d, NULL, e, phi);
     if (mpz_cmp_ui(d,0) < 0)
         mpz_mod(d, d, phi);
 
@@ -134,17 +134,17 @@ void key_generation(int length) {
     mpz_inits(dP, dQ, qInv, NULL);
 
     //dP:
-    mpz_gcdext(gcd, dP, NULL, p1, e);
+    mpz_gcdext(gcd, dP, NULL, e, p1);
     if (mpz_cmp_ui(dP, 0) < 0)
         mpz_mod(dP, dP, p1);
 
     //dQ:
-    mpz_gcdext(gcd, dQ, NULL, q1, e);
+    mpz_gcdext(gcd, dQ, NULL, e, q1);
     if (mpz_cmp_ui(dQ, 0) < 0)
         mpz_mod(dQ, dQ, q1);
 
     //qInv:
-    mpz_gcdext(gcd, qInv, NULL, p, q);
+    mpz_gcdext(gcd, qInv, NULL, q, p);
     if (mpz_cmp_ui(qInv, 0) < 0)
         mpz_mod(qInv, qInv, p);
 
