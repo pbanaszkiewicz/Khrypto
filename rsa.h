@@ -192,7 +192,7 @@ void key_generation(int length, RSA_PRIVATE &priv, RSA_PUBLIC &pub) {
 void encrypt(mpz_t &cipher, string &message, RSA_PUBLIC pub) {
     //EB = 00 || 02 || PS || 00 || D
     //k = |n|
-    long long k = mpz_sizeinbase(n, 2) / 8;
+    long long k = mpz_sizeinbase(pub.n, 2) / 8;
 
     //D = message, |D|<=k-11
 
@@ -215,7 +215,7 @@ void encrypt(mpz_t &cipher, string &message, RSA_PUBLIC pub) {
 
     string EB2(2*EB.length(), '0');
         int c, d;
-        for (int i=0; i<EB.length(); i++) {
+        for (unsigned int i=0; i<EB.length(); i++) {
             d = int(EB[i]);
             if (d<0) d = 256 + d;
 
@@ -233,7 +233,7 @@ void encrypt(mpz_t &cipher, string &message, RSA_PUBLIC pub) {
         mpz_t m;
         mpz_init_set_str(m, EB2.c_str(), 16);
 
-        cout << "EB2" << endl << EB2 << endl << endl;
+        //cout << "EB2" << endl << EB2 << endl << endl;
         //now we have EB2 generated
 
         //y = x^e mod n
@@ -286,7 +286,7 @@ void decrypt(string &message, mpz_t &cipher, RSA_PRIVATE &priv) {
     //really shitty shitty part starts here…
     int c, d;
     string msg(message.length() / 2, ' ');
-    for (int i=0; i<message.length(); i+=2) {
+    for (unsigned int i=0; i<message.length(); i+=2) {
         c = int(message[i]);
         (c >= 97 ? c-=87 : c-=48 );
         d = int(message[i+1]);
