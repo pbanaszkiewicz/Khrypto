@@ -8,6 +8,9 @@
 #include <gmp.h>
 using namespace std;
 
+// TODO: make it better
+// rand() % limit ?
+// inline?
 int randomNumber(unsigned int limit) {
     unsigned int n;
     unsigned int mask = 0xFFFFFFFF;
@@ -22,6 +25,8 @@ int randomNumber(unsigned int limit) {
     return n;
 }
 
+
+// TODO: probably redundant
 //Converts integer into length-byte string representation, so for example:
 //int2str(1, 4) = "00000001"
 //int2str(123, 3) = "00007B"
@@ -55,7 +60,7 @@ typedef struct RSAPrivateKey {
     }
 } RSA_PRIVATE;
 
-void key_generation(int length, RSA_PRIVATE *priv, RSA_PUBLIC *pub) {
+void key_generation(int length, RSA_PRIVATE &priv, RSA_PUBLIC &pub) {
     mpz_t p, q, p1, q1;
     mpz_init2(p, length/2);
     mpz_init2(q, length/2);
@@ -158,24 +163,33 @@ void key_generation(int length, RSA_PRIVATE *priv, RSA_PUBLIC *pub) {
 
     //public key:
     //(n, e)
-    mpz_set(pub->n, n);
-    mpz_set(pub->e, e);
+    mpz_set(pub.n, n);
+    mpz_set(pub.e, e);
 
     //private key:
     //(n, d)  OR  (p, q, dP, dQ, qInv)
-    mpz_set(priv->p, p);
-    mpz_set(priv->q, q);
-    mpz_set(priv->dP, dP);
-    mpz_set(priv->dQ, dQ);
-    mpz_set(priv->qInv, qInv);
+    mpz_set(priv.p, p);
+    mpz_set(priv.q, q);
+    mpz_set(priv.dP, dP);
+    mpz_set(priv.dQ, dQ);
+    mpz_set(priv.qInv, qInv);
 
     mpz_clears(p, q, p1, q1, n, phi, e, gcd, d, dP, dQ, qInv, NULL);
 }
 
+/*TODO LIST:
+  1. sprawdzić która metoda szyfrowania jest lepsza, która działa dobrze:
+    - normalne podnoszenie do potęgi + modulo
+    - czy wykorzystanie Chinese Remaining Theorem
+  2. udoskonalić dzielenie tekstu jawnego na bloki i ich szyfrowanie
+  3. wprowadzić session key?
+  4. wprowadzić PKCS#1 w wersji 2.1?
+  */
+
 // using PKCS#1 v1.5 (http://tools.ietf.org/html/rfc2313)
 // it's easier than v2.1 (http://tools.ietf.org/html/rfc3447#page-6)
 // http://www.di-mgt.com.au/rsa_alg.html#pkcs1schemes
-void encrypt(mpz_t &cipher, string &message, mpz_t &n, mpz_t &e) {
+void encrypt(mpz_t &cipher, string &message, RSA_PUBLIC pub) {
     //EB = 00 || 02 || PS || 00 || D
     //k = |n|
     long long k = mpz_sizeinbase(n, 2) / 8;
@@ -187,56 +201,101 @@ void encrypt(mpz_t &cipher, string &message, mpz_t &n, mpz_t &e) {
 
     string PS_tab(ps_len, '0'); int rnd;
     for (int i=0; i<ps_len; i++) {
-        rnd = randomNumber(256);
+        rnd = randomNumber(255)+1;  //ensures that rnd != 00
         PS_tab[i] = (unsigned char)(rnd);
     }
 
     string EB("  ");
-    EB[0]=0; EB[1]=2;
+    EB[0]=0;
+    EB[1]=2;
     EB.append(PS_tab);
-    EB[3+ps_len]=0;
+    EB.append(" ");
+    EB[EB.length()-1] = 0; //last byte is now 00
     EB.append(message);
 
     string EB2(2*EB.length(), '0');
+        int c, d;
+        for (int i=0; i<EB.length(); i++) {
+            d = int(EB[i]);
+            if (d<0) d = 256 + d;
 
-    int c, d;
-    for (int i=0; i<EB.length(); i++) {
-        d = int(EB[i]);
-        if (d<0) d = 256 + d;
+            c = (d / 16) % 16;
+            (c > 9 ? c += 55 : c += 48 );
+            EB2[2*i] = (unsigned char)(c);
 
-        c = (d / 16) % 16;
-        (c > 9 ? c += 55 : c += 48 );
-        EB2[2*i] = (unsigned char)(c);
+            c = d % 16;
+            (c > 9 ? c += 55 : c += 48 );
+            EB2[2*i+1] = (unsigned char)(c);
+        }
 
-        c = d % 16;
-        (c > 9 ? c += 55 : c += 48 );
-        EB2[2*i+1] = (unsigned char)(c);
-    }
+        //EB = EB2 == 0002 || PS || 00 || D
 
-    //EB = EB2 == 0002 || PS || 00 || D
+        mpz_t m;
+        mpz_init_set_str(m, EB2.c_str(), 16);
 
-    mpz_t m;
-    mpz_init_set_str(m, EB2.c_str(), 16);
+        cout << "EB2" << endl << EB2 << endl << endl;
+        //now we have EB2 generated
 
-    mpz_powm(cipher, m, e, n);
+        //y = x^e mod n
+        //e = e(k-1)e(k-2)...e(1)e(0)
+        string e_str = mpz_get_str(NULL, 2, pub.e);
+        int k_e = e_str.length();
 
-//    //y = x^e mod n
-//    //e = e(k-1)e(k-2)...e(1)e(0)
-//    string e_str = mpz_get_str(NULL, 2, e);
-//    int k_e = e_str.length();
-//    mpz_t y, x;
-//    mpz_inits(y, x, NULL);
-//    //x == EB
-//    mpz_set(y, x);
-//    for (long long i=1; i<k_e; i++) {
-//        mpz_powm_ui(y, y, 2, n);
-//        if (e_str[i]=='1') {
-//            mpz_mul(y, y, x);
-//            mpz_mod(y, y, n);
-//        }
-//    }
+        mpz_t y, x;
+        mpz_inits(y, x, NULL);
+        //x == EB2
+        mpz_set(x, m);
+        mpz_set(y, x);
+
+        for (long long i=1; i<k_e; i++) {
+            mpz_powm_ui(y, y, 2, pub.n);
+            if (e_str[i]=='1') {
+                mpz_mul(y, y, x);
+                mpz_mod(y, y, pub.n);
+            }
+        }
+        mpz_set(cipher, y);
+
 }
 
-void decrypt();
+void decrypt(string &message, mpz_t &cipher, RSA_PRIVATE &priv) {
+    mpz_t m, m1, m2, h;
+    mpz_inits(m, m1, m2, h, NULL);
+
+    mpz_powm(m1, cipher, priv.dP, priv.p);
+    mpz_powm(m2, cipher, priv.dQ, priv.q);
+
+    if (mpz_cmp(m1, m2) < 0)
+        mpz_add(m1, m1, priv.p);
+    mpz_sub(m1, m1, m2);
+    mpz_mul(h, priv.qInv, m1);
+    mpz_mod(h, h, priv.p);
+    mpz_mul(h, h, priv.q);
+    mpz_add(m, m2, h);
+
+    //now we have m decrypted, but we still need to unhask
+    //the message from it
+    //EB = EB2 == 0002 || PS || 00 || D
+    message = "000";
+    message.append(mpz_get_str(NULL, 16, m));
+    //cout << message.length() << endl << endl;
+    //message = mpz_get_str(NULL, 16, m);
+    int msg_start = message.rfind("00") + 2;
+    message = message.substr(msg_start);
+
+    //really shitty shitty part starts here…
+    int c, d;
+    string msg(message.length() / 2, ' ');
+    for (int i=0; i<message.length(); i+=2) {
+        c = int(message[i]);
+        (c >= 97 ? c-=87 : c-=48 );
+        d = int(message[i+1]);
+        (d >= 97 ? d-=87 : d-=48 );
+        c = c * 16 + d;
+        msg[0.5*i] = c;
+    }
+    message = msg;
+}
+
 
 #endif // RSA_H
