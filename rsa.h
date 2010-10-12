@@ -30,18 +30,18 @@ int randomNumber(unsigned int limit) {
 //Converts integer into length-byte string representation, so for example:
 //int2str(1, 4) = "00000001"
 //int2str(123, 3) = "00007B"
-string int2str(mpz_t &i, unsigned int length) {
-    if (mpz_cmp_d(i, pow(256.0, (double) length)) >= 0) {
-        return string();
-    }
+//string int2str(mpz_t &i, unsigned int length) {
+//    if (mpz_cmp_d(i, pow(256.0, (double) length)) >= 0) {
+//        return string();
+//    }
 
-    string a = mpz_get_str(NULL, 16, i);
-    if (length*2 > a.length()) {
-        string b(length*2 - a.length(), '0');
-        a = b + a;
-    }
-    return a;
-}
+//    string a = mpz_get_str(NULL, 16, i);
+//    if (length*2 > a.length()) {
+//        string b(length*2 - a.length(), '0');
+//        a = b + a;
+//    }
+//    return a;
+//}
 
 // TODO: really not needed because of mpz_set_str()
 char* str2int(int i, int length);
