@@ -25,7 +25,7 @@
     <item>
      <widget class="QGroupBox" name="gbSettings">
       <property name="title">
-       <string>Ustawienia</string>
+       <string>Settings</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,0,0">
        <item>
@@ -36,7 +36,7 @@
          <item row="0" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
-            <string>Metoda</string>
+            <string>Method</string>
            </property>
           </widget>
          </item>
@@ -44,12 +44,12 @@
           <widget class="QComboBox" name="cbMethod">
            <item>
             <property name="text">
-             <string>Szyfr Cezara</string>
+             <string>Caezar Cipher</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Płot</string>
+             <string>Fence</string>
             </property>
            </item>
            <item>
@@ -72,7 +72,7 @@
          <item row="1" column="0">
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>Działanie</string>
+            <string>Action</string>
            </property>
           </widget>
          </item>
@@ -83,12 +83,12 @@
            </property>
            <item>
             <property name="text">
-             <string>Zaszyfrowanie</string>
+             <string>Encrypting</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Odszyfrowanie</string>
+             <string>Decrypting</string>
             </property>
            </item>
           </widget>
@@ -96,7 +96,7 @@
          <item row="2" column="0">
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>Klucz</string>
+            <string>Key</string>
            </property>
           </widget>
          </item>
@@ -130,40 +130,40 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="btnGenerateRSAKey">
               <property name="text">
-               <string>Generuj klucz:</string>
+               <string>Generate key</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QComboBox" name="comboBox">
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <item>
                <property name="text">
-                <string>512 bitów</string>
+                <string>512 bits</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>1024 bitów</string>
+                <string>1024 bits</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>2048 bitów</string>
+                <string>2048 bits</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>4096 bitów</string>
+                <string>4096 bits</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>8192 bitów</string>
+                <string>8192 bits</string>
                </property>
               </item>
              </widget>
@@ -175,21 +175,21 @@
             <item>
              <widget class="QLabel" name="label_6">
               <property name="text">
-               <string>Klucz publiczny:</string>
+               <string>Public key:</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="btnRSALoad1">
               <property name="text">
-               <string>Ładuj</string>
+               <string>Load</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="btnRSASave1">
               <property name="text">
-               <string>Zapisz</string>
+               <string>Save</string>
               </property>
              </widget>
             </item>
@@ -207,21 +207,21 @@
             <item>
              <widget class="QLabel" name="label_5">
               <property name="text">
-               <string>Klucz prywatny:</string>
+               <string>Private key:</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="btnRSALoad2">
               <property name="text">
-               <string>Ładuj</string>
+               <string>Load</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="btnRSASave2">
               <property name="text">
-               <string>Zapisz</string>
+               <string>Save</string>
               </property>
              </widget>
             </item>
@@ -260,7 +260,7 @@
         <item>
          <widget class="QLabel" name="LInput">
           <property name="text">
-           <string>Tekst wejściowy:</string>
+           <string>Input text:</string>
           </property>
          </widget>
         </item>
@@ -280,7 +280,7 @@
         <item>
          <widget class="QPushButton" name="btnLoad">
           <property name="text">
-           <string>Ładuj z pliku</string>
+           <string>Load from file</string>
           </property>
          </widget>
         </item>
@@ -296,7 +296,7 @@
       <item>
        <widget class="QPushButton" name="btnCode">
         <property name="text">
-         <string>Zaszyfruj</string>
+         <string>Encrypt</string>
         </property>
        </widget>
       </item>
@@ -305,7 +305,7 @@
         <item>
          <widget class="QLabel" name="LOutput">
           <property name="text">
-           <string>Tekst wyjściowy:</string>
+           <string>Output text:</string>
           </property>
          </widget>
         </item>
@@ -325,7 +325,7 @@
         <item>
          <widget class="QPushButton" name="btnSave">
           <property name="text">
-           <string>Zapisz do pliku</string>
+           <string>Save to file</string>
           </property>
          </widget>
         </item>
@@ -351,25 +351,25 @@
      <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuPlik">
+   <widget class="QMenu" name="menuApplication">
     <property name="title">
-     <string>Aplikacja</string>
+     <string>Application</string>
     </property>
-    <addaction name="actionGeneruj_losowy_klucz"/>
+    <addaction name="actionGenerate_random_key"/>
     <addaction name="separator"/>
-    <addaction name="actionWyj_cie"/>
+    <addaction name="actionExit"/>
    </widget>
-   <addaction name="menuPlik"/>
+   <addaction name="menuApplication"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionGeneruj_losowy_klucz">
+  <action name="actionGenerate_random_key">
    <property name="text">
-    <string>Generuj losowy klucz</string>
+    <string>Generate random key</string>
    </property>
   </action>
-  <action name="actionWyj_cie">
+  <action name="actionExit">
    <property name="text">
-    <string>Wyjście</string>
+    <string>Exit</string>
    </property>
   </action>
  </widget>
@@ -377,7 +377,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>actionWyj_cie</sender>
+   <sender>actionExit</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>close()</slot>

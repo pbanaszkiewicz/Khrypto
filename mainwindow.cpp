@@ -107,9 +107,9 @@ void MainWindow::method_changed(int index) {
 void MainWindow::action_changed(int index) {
     // TODO: change this to the switch statement
     if (index==0) {
-        ui->btnCode->setText(tr("Zaszyfruj"));
+        ui->btnCode->setText(tr("Encrypt"));
     } else if (index==1) {
-        ui->btnCode->setText(tr("Odszyfruj"));
+        ui->btnCode->setText(tr("Decrypt"));
     }
 }
 

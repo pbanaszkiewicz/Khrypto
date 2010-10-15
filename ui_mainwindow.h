@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri Oct 15 20:56:55 2010
+** Created: Fri Oct 15 21:33:12 2010
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -36,8 +36,8 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
-    QAction *actionGeneruj_losowy_klucz;
-    QAction *actionWyj_cie;
+    QAction *actionGenerate_random_key;
+    QAction *actionExit;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_3;
     QGroupBox *gbSettings;
@@ -52,7 +52,7 @@ public:
     QGroupBox *gbRSA;
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_6;
-    QPushButton *pushButton;
+    QPushButton *btnGenerateRSAKey;
     QComboBox *comboBox;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_6;
@@ -78,7 +78,7 @@ public:
     QPushButton *btnSave;
     QPlainTextEdit *tOutput;
     QMenuBar *menuBar;
-    QMenu *menuPlik;
+    QMenu *menuApplication;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -90,10 +90,10 @@ public:
         icon.addFile(QString::fromUtf8("icon.ico"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
         MainWindow->setUnifiedTitleAndToolBarOnMac(true);
-        actionGeneruj_losowy_klucz = new QAction(MainWindow);
-        actionGeneruj_losowy_klucz->setObjectName(QString::fromUtf8("actionGeneruj_losowy_klucz"));
-        actionWyj_cie = new QAction(MainWindow);
-        actionWyj_cie->setObjectName(QString::fromUtf8("actionWyj_cie"));
+        actionGenerate_random_key = new QAction(MainWindow);
+        actionGenerate_random_key->setObjectName(QString::fromUtf8("actionGenerate_random_key"));
+        actionExit = new QAction(MainWindow);
+        actionExit->setObjectName(QString::fromUtf8("actionExit"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         horizontalLayout_3 = new QHBoxLayout(centralWidget);
@@ -160,10 +160,10 @@ public:
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setSpacing(6);
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
-        pushButton = new QPushButton(gbRSA);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        btnGenerateRSAKey = new QPushButton(gbRSA);
+        btnGenerateRSAKey->setObjectName(QString::fromUtf8("btnGenerateRSAKey"));
 
-        horizontalLayout_6->addWidget(pushButton);
+        horizontalLayout_6->addWidget(btnGenerateRSAKey);
 
         comboBox = new QComboBox(gbRSA);
         comboBox->setObjectName(QString::fromUtf8("comboBox"));
@@ -305,22 +305,22 @@ public:
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 674, 23));
-        menuPlik = new QMenu(menuBar);
-        menuPlik->setObjectName(QString::fromUtf8("menuPlik"));
+        menuApplication = new QMenu(menuBar);
+        menuApplication->setObjectName(QString::fromUtf8("menuApplication"));
         MainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MainWindow->setStatusBar(statusBar);
 
-        menuBar->addAction(menuPlik->menuAction());
-        menuPlik->addAction(actionGeneruj_losowy_klucz);
-        menuPlik->addSeparator();
-        menuPlik->addAction(actionWyj_cie);
+        menuBar->addAction(menuApplication->menuAction());
+        menuApplication->addAction(actionGenerate_random_key);
+        menuApplication->addSeparator();
+        menuApplication->addAction(actionExit);
 
         retranslateUi(MainWindow);
-        QObject::connect(actionWyj_cie, SIGNAL(triggered()), MainWindow, SLOT(close()));
+        QObject::connect(actionExit, SIGNAL(triggered()), MainWindow, SLOT(close()));
 
-        comboBox->setCurrentIndex(1);
+        comboBox->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -329,49 +329,47 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Khrypto", 0, QApplication::UnicodeUTF8));
-        actionGeneruj_losowy_klucz->setText(QApplication::translate("MainWindow", "Generuj losowy klucz", 0, QApplication::UnicodeUTF8));
-        actionWyj_cie->setText(QApplication::translate("MainWindow", "Wyj\305\233cie", 0, QApplication::UnicodeUTF8));
-        gbSettings->setTitle(QApplication::translate("MainWindow", "Ustawienia", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("MainWindow", "Metoda", 0, QApplication::UnicodeUTF8));
+        actionGenerate_random_key->setText(QApplication::translate("MainWindow", "Generate random key", 0, QApplication::UnicodeUTF8));
+        actionExit->setText(QApplication::translate("MainWindow", "Exit", 0, QApplication::UnicodeUTF8));
+        gbSettings->setTitle(QApplication::translate("MainWindow", "Settings", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("MainWindow", "Method", 0, QApplication::UnicodeUTF8));
         cbMethod->clear();
         cbMethod->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "Szyfr Cezara", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "P\305\202ot", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("MainWindow", "Caezar Cipher", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("MainWindow", "Fence", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("MainWindow", "XOR", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("MainWindow", "RSA", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "MD5", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "DES", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("MainWindow", "Huffman", 0, QApplication::UnicodeUTF8)
         );
-        label_2->setText(QApplication::translate("MainWindow", "Dzia\305\202anie", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWindow", "Action", 0, QApplication::UnicodeUTF8));
         cbAction->clear();
         cbAction->insertItems(0, QStringList()
          << QApplication::translate("MainWindow", "Zaszyfrowanie", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("MainWindow", "Odszyfrowanie", 0, QApplication::UnicodeUTF8)
         );
-        label_3->setText(QApplication::translate("MainWindow", "Klucz", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("MainWindow", "Key", 0, QApplication::UnicodeUTF8));
         gbRSA->setTitle(QApplication::translate("MainWindow", "RSA", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "Generuj klucz:", 0, QApplication::UnicodeUTF8));
+        btnGenerateRSAKey->setText(QApplication::translate("MainWindow", "Generate key", 0, QApplication::UnicodeUTF8));
         comboBox->clear();
         comboBox->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "512 bit\303\263w", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "1024 bit\303\263w", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "2048 bit\303\263w", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "4096 bit\303\263w", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "8192 bit\303\263w", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("MainWindow", "512 bits", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("MainWindow", "1024 bits", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("MainWindow", "2048 bits", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("MainWindow", "4096 bits", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("MainWindow", "8192 bits", 0, QApplication::UnicodeUTF8)
         );
-        label_6->setText(QApplication::translate("MainWindow", "Klucz publiczny:", 0, QApplication::UnicodeUTF8));
-        btnRSALoad1->setText(QApplication::translate("MainWindow", "\305\201aduj", 0, QApplication::UnicodeUTF8));
-        btnRSASave1->setText(QApplication::translate("MainWindow", "Zapisz", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("MainWindow", "Klucz prywatny:", 0, QApplication::UnicodeUTF8));
-        btnRSALoad2->setText(QApplication::translate("MainWindow", "\305\201aduj", 0, QApplication::UnicodeUTF8));
-        btnRSASave2->setText(QApplication::translate("MainWindow", "Zapisz", 0, QApplication::UnicodeUTF8));
-        LInput->setText(QApplication::translate("MainWindow", "Tekst wej\305\233ciowy:", 0, QApplication::UnicodeUTF8));
-        btnLoad->setText(QApplication::translate("MainWindow", "\305\201aduj z pliku", 0, QApplication::UnicodeUTF8));
-        btnCode->setText(QApplication::translate("MainWindow", "Zaszyfruj", 0, QApplication::UnicodeUTF8));
-        LOutput->setText(QApplication::translate("MainWindow", "Tekst wyj\305\233ciowy:", 0, QApplication::UnicodeUTF8));
-        btnSave->setText(QApplication::translate("MainWindow", "Zapisz do pliku", 0, QApplication::UnicodeUTF8));
-        menuPlik->setTitle(QApplication::translate("MainWindow", "Aplikacja", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("MainWindow", "Public key:", 0, QApplication::UnicodeUTF8));
+        btnRSALoad1->setText(QApplication::translate("MainWindow", "Load", 0, QApplication::UnicodeUTF8));
+        btnRSASave1->setText(QApplication::translate("MainWindow", "Save", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("MainWindow", "Private key:", 0, QApplication::UnicodeUTF8));
+        btnRSALoad2->setText(QApplication::translate("MainWindow", "Load", 0, QApplication::UnicodeUTF8));
+        btnRSASave2->setText(QApplication::translate("MainWindow", "Save", 0, QApplication::UnicodeUTF8));
+        LInput->setText(QApplication::translate("MainWindow", "Input text:", 0, QApplication::UnicodeUTF8));
+        btnLoad->setText(QApplication::translate("MainWindow", "Load from file", 0, QApplication::UnicodeUTF8));
+        btnCode->setText(QApplication::translate("MainWindow", "Encrypt", 0, QApplication::UnicodeUTF8));
+        LOutput->setText(QApplication::translate("MainWindow", "Output text:", 0, QApplication::UnicodeUTF8));
+        btnSave->setText(QApplication::translate("MainWindow", "Save to file", 0, QApplication::UnicodeUTF8));
+        menuApplication->setTitle(QApplication::translate("MainWindow", "Application", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

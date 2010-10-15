@@ -16,7 +16,7 @@ CXXFLAGS      = -pipe -g -Wall -W -D_REENTRANT $(DEFINES)
 INCPATH       = -I/usr/share/qt/mkspecs/linux-g++ -I. -I/usr/include/QtCore -I/usr/include/QtGui -I/usr/include -I. -I.
 LINK          = g++
 LFLAGS        = -Wl,--hash-style=gnu -Wl,--as-needed
-LIBS          = $(SUBLIBS)  -L/usr/lib -lQtGui -lQtCore -lpthread 
+LIBS          = $(SUBLIBS)  -L/usr/lib -lQtGui -lQtCore -lpthread -lgmp -lgmpxx
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /usr/bin/qmake
