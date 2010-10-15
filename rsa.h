@@ -14,6 +14,9 @@ typedef struct RSAPublicKey {
     RSAPublicKey() {
         mpz_inits(n, e, NULL);
     }
+    ~RSAPublicKey() {
+        mpz_clears(n, e, NULL);
+    }
 } RSA_PUBLIC;
 
 //TODO: make docs
@@ -23,6 +26,9 @@ typedef struct RSAPrivateKey {
     RSAPrivateKey() {
         mpz_inits(p, q, dP, dQ, qInv, NULL);
     }
+    ~RSAPrivateKey() {
+        mpz_clears(p, q, dP, dQ, qInv, NULL);
+    }
 } RSA_PRIVATE;
 
 //TODO: make docs
@@ -31,6 +37,7 @@ inline int random(unsigned int limit) {
 }
 
 //TODO: make docs
+//TODO: test if it works faster with mpz_get_str or similar ;]
 string decbyte2hex(int n) {
     string result = "00";
     int c;
@@ -44,6 +51,7 @@ string decbyte2hex(int n) {
 }
 
 //TODO: make docs
+//TODO: test if it works faster with mpz_get_str or similar ;]
 int hex2decbyte(char s0, char s1) {
     int result = 0;
     int c=int(s0), d=int(s1);
@@ -221,6 +229,7 @@ void encrypt_chunk(mpz_t &cipher, string &message, RSA_PUBLIC pub) {
     }
     mpz_set(cipher, y);
 
+    mpz_clears(y, x, NULL);
 }
 
 //TODO: make docs
@@ -253,9 +262,11 @@ void decrypt_chunk(string &message, mpz_t &cipher, RSA_PRIVATE &priv) {
         msg[0.5*i] = (unsigned char) hex2decbyte(message[i], message[i+1]);
     }
     message = msg;
+
+    mpz_clears(m, m1, m2, h, NULL);
 }
 
-void encrypt(string message, RSA_PUBLIC pub) {
+void encrypt(string message, vector<string> &cipher, RSA_PUBLIC &pub) {
     //sprawdzenie długości message wg algorytmu
     //robienie w pętli encrypt()
     //zwrócenie wektora? tablicy? coś w ten deseń
@@ -269,9 +280,32 @@ void encrypt(string message, RSA_PUBLIC pub) {
     // and so on ...
     int length = (pub.length / 8) - 11;
 
-    int parts = 1;
-    if (message.length()!=length)
-        parts = (message.length() / length)+1;
+    //parts = 1 if |msg|==length
+    //parts = 2 and more  if  |msg|>length
+    //parts = 0 never
+    int parts = ( (message.length()-1) / length) + 1;
+
+    string msg = message, substr;
+    mpz_t cipher; mpz_init(cipher);
+
+    for (int i=0; i<parts; i++) {
+        //encrypting chunks
+        substr = msg.substr(0, length);
+        msg = msg.substr(length);
+
+        encrypt_chunk(cipher, substr, pub);
+        //dodawanie do wektora?
+    }
+
+    //zwracanie wektora?
+
+    mpz_clear(cipher);
+}
+
+void decrypt(string &message, vector<string> &cipher, RSA_PRIVATE &priv) {
+    //podzielenie cipher na takiej samej długości odcinki
+    //decrypt na każdym odcinku
+    //połączenie wyników
 }
 
 
