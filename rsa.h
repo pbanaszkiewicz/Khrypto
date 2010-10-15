@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdlib>
 #include <gmp.h>
+#include <list>
 using namespace std;
 
 //TODO: make docs
@@ -14,9 +15,6 @@ typedef struct RSAPublicKey {
     RSAPublicKey() {
         mpz_inits(n, e, NULL);
     }
-    ~RSAPublicKey() {
-        mpz_clears(n, e, NULL);
-    }
 } RSA_PUBLIC;
 
 //TODO: make docs
@@ -25,9 +23,6 @@ typedef struct RSAPrivateKey {
     mpz_t p, q, dP, dQ, qInv;
     RSAPrivateKey() {
         mpz_inits(p, q, dP, dQ, qInv, NULL);
-    }
-    ~RSAPrivateKey() {
-        mpz_clears(p, q, dP, dQ, qInv, NULL);
     }
 } RSA_PRIVATE;
 
@@ -176,10 +171,9 @@ void key_generation(int length, RSA_PRIVATE &priv, RSA_PUBLIC &pub) {
 }
 
 /*TODO LIST:
-  2. udoskonalić dzielenie tekstu jawnego na bloki i ich szyfrowanie
   3. wprowadzić session key?
   4. wprowadzić PKCS#1 w wersji 2.1?
-  5. wrzucić mpz_clears-y
+  5. IMPROVE YOUR DOCS!!!
   */
 //TODO: make docs
 void encrypt_chunk(mpz_t &cipher, string &message, RSA_PUBLIC pub) {
@@ -266,11 +260,16 @@ void decrypt_chunk(string &message, mpz_t &cipher, RSA_PRIVATE &priv) {
     mpz_clears(m, m1, m2, h, NULL);
 }
 
-void encrypt(string message, vector<string> &cipher, RSA_PUBLIC &pub) {
+//TODO: make docs
+//include <iostream>
+//using namespace std;
+void encrypt(string message, list<string> &cipher, RSA_PUBLIC &pub) {
     //sprawdzenie długości message wg algorytmu
     //robienie w pętli encrypt()
     //zwrócenie wektora? tablicy? coś w ten deseń
     // ... po testach: musi być ze stringiem…
+
+    cipher.clear();
 
     //maximum length of single message chunk
     // key  : length
@@ -285,25 +284,49 @@ void encrypt(string message, vector<string> &cipher, RSA_PUBLIC &pub) {
     //parts = 0 never
     int parts = ( (message.length()-1) / length) + 1;
 
-    string msg = message, substr;
-    mpz_t cipher; mpz_init(cipher);
+    string msg = message, substr, c_str;
+    mpz_t c; mpz_init(c);
+    //cout << "1" << endl;
 
     for (int i=0; i<parts; i++) {
         //encrypting chunks
-        substr = msg.substr(0, length);
-        msg = msg.substr(length);
+        //cout << i << " " << length << endl;
+        if (msg.length() > length) {
+            substr = msg.substr(0, length);
+            msg = msg.substr(length);
+        } else {
+            substr = msg;
+            msg = "";
+        }
 
-        encrypt_chunk(cipher, substr, pub);
-        //dodawanie do wektora?
+        encrypt_chunk(c, substr, pub);
+        //dodawanie do listy?
+        c_str = mpz_get_str(NULL, 16, c);
+        cipher.push_back(c_str);
     }
 
-    //zwracanie wektora?
+    //zwracanie listy?
+    //nie trzeba, bo mamy przez referencję
 
-    mpz_clear(cipher);
+    mpz_clear(c);
 }
 
-void decrypt(string &message, vector<string> &cipher, RSA_PRIVATE &priv) {
-    //podzielenie cipher na takiej samej długości odcinki
+//TODO: make docs
+void decrypt(string &message, list<string> &cipher, RSA_PRIVATE &priv) {
+    list<string>::iterator iter1 = cipher.begin();
+    string c_str;
+    mpz_t c;
+    mpz_init(c);
+    message.clear();
+    while ( iter1 != cipher.end() ) {
+        c_str = *iter1;
+        mpz_set_str(c, c_str.c_str(), 16);
+        decrypt_chunk(c_str, c, priv);
+        message.append(c_str);
+        iter1++;
+    }
+
+    mpz_clear(c);
     //decrypt na każdym odcinku
     //połączenie wyników
 }
