@@ -9,6 +9,7 @@ using namespace std;
 
 //TODO: make docs
 typedef struct RSAPublicKey {
+    int length;
     mpz_t n, e;
     RSAPublicKey() {
         mpz_inits(n, e, NULL);
@@ -17,6 +18,7 @@ typedef struct RSAPublicKey {
 
 //TODO: make docs
 typedef struct RSAPrivateKey {
+    int length;
     mpz_t p, q, dP, dQ, qInv;
     RSAPrivateKey() {
         mpz_inits(p, q, dP, dQ, qInv, NULL);
@@ -160,6 +162,8 @@ void key_generation(int length, RSA_PRIVATE &priv, RSA_PUBLIC &pub) {
     mpz_set(priv.dQ, dQ);
     mpz_set(priv.qInv, qInv);
 
+    pub.length = priv.length = length;
+
     mpz_clears(p, q, p1, q1, n, phi, e, gcd, d, dP, dQ, qInv, NULL);
 }
 
@@ -167,13 +171,10 @@ void key_generation(int length, RSA_PRIVATE &priv, RSA_PUBLIC &pub) {
   2. udoskonalić dzielenie tekstu jawnego na bloki i ich szyfrowanie
   3. wprowadzić session key?
   4. wprowadzić PKCS#1 w wersji 2.1?
+  5. wrzucić mpz_clears-y
   */
 //TODO: make docs
-
-// using PKCS#1 v1.5 (http://tools.ietf.org/html/rfc2313)
-// it's easier than v2.1 (http://tools.ietf.org/html/rfc3447#page-6)
-// http://www.di-mgt.com.au/rsa_alg.html#pkcs1schemes
-void encrypt(mpz_t &cipher, string &message, RSA_PUBLIC pub) {
+void encrypt_chunk(mpz_t &cipher, string &message, RSA_PUBLIC pub) {
     //EB = 00 || 02 || PS || 00 || D
     //k = |n|
     long long k = mpz_sizeinbase(pub.n, 2) / 8;
@@ -223,7 +224,7 @@ void encrypt(mpz_t &cipher, string &message, RSA_PUBLIC pub) {
 }
 
 //TODO: make docs
-void decrypt(string &message, mpz_t &cipher, RSA_PRIVATE &priv) {
+void decrypt_chunk(string &message, mpz_t &cipher, RSA_PRIVATE &priv) {
     mpz_t m, m1, m2, h;
     mpz_inits(m, m1, m2, h, NULL);
 
@@ -252,6 +253,25 @@ void decrypt(string &message, mpz_t &cipher, RSA_PRIVATE &priv) {
         msg[0.5*i] = (unsigned char) hex2decbyte(message[i], message[i+1]);
     }
     message = msg;
+}
+
+void encrypt(string message, RSA_PUBLIC pub) {
+    //sprawdzenie długości message wg algorytmu
+    //robienie w pętli encrypt()
+    //zwrócenie wektora? tablicy? coś w ten deseń
+    // ... po testach: musi być ze stringiem…
+
+    //maximum length of single message chunk
+    // key  : length
+    //512b  : 53B
+    //1024b : 117B
+    //2048b : 245B
+    // and so on ...
+    int length = (pub.length / 8) - 11;
+
+    int parts = 1;
+    if (message.length()!=length)
+        parts = (message.length() / length)+1;
 }
 
 
