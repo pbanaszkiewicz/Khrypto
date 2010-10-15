@@ -7,6 +7,8 @@ SOURCES += main.cpp \
     mainwindow.cpp
 HEADERS += mainwindow.h \
     ciphers.h \
-    rsa.h
+    rsa.h \
+    rsa_files.h \
+    huffman.h
 FORMS += mainwindow.ui
 RESOURCES += 

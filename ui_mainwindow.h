@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Sep 18 22:47:47 2010
-**      by: Qt User Interface Compiler version 4.6.3
+** Created: Fri Oct 15 20:56:55 2010
+**      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -56,11 +56,13 @@ public:
     QComboBox *comboBox;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_6;
-    QPushButton *btnLoad2;
+    QPushButton *btnRSALoad1;
+    QPushButton *btnRSASave1;
     QPlainTextEdit *plainTextEdit;
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_5;
-    QPushButton *btnLoad3;
+    QPushButton *btnRSALoad2;
+    QPushButton *btnRSASave2;
     QPlainTextEdit *plainTextEdit_2;
     QSpacerItem *verticalSpacer;
     QVBoxLayout *verticalLayout;
@@ -179,16 +181,22 @@ public:
 
         horizontalLayout_5->addWidget(label_6);
 
-        btnLoad2 = new QPushButton(gbRSA);
-        btnLoad2->setObjectName(QString::fromUtf8("btnLoad2"));
+        btnRSALoad1 = new QPushButton(gbRSA);
+        btnRSALoad1->setObjectName(QString::fromUtf8("btnRSALoad1"));
 
-        horizontalLayout_5->addWidget(btnLoad2);
+        horizontalLayout_5->addWidget(btnRSALoad1);
+
+        btnRSASave1 = new QPushButton(gbRSA);
+        btnRSASave1->setObjectName(QString::fromUtf8("btnRSASave1"));
+
+        horizontalLayout_5->addWidget(btnRSASave1);
 
 
         verticalLayout_2->addLayout(horizontalLayout_5);
 
         plainTextEdit = new QPlainTextEdit(gbRSA);
         plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
+        plainTextEdit->setReadOnly(true);
 
         verticalLayout_2->addWidget(plainTextEdit);
 
@@ -200,16 +208,22 @@ public:
 
         horizontalLayout_4->addWidget(label_5);
 
-        btnLoad3 = new QPushButton(gbRSA);
-        btnLoad3->setObjectName(QString::fromUtf8("btnLoad3"));
+        btnRSALoad2 = new QPushButton(gbRSA);
+        btnRSALoad2->setObjectName(QString::fromUtf8("btnRSALoad2"));
 
-        horizontalLayout_4->addWidget(btnLoad3);
+        horizontalLayout_4->addWidget(btnRSALoad2);
+
+        btnRSASave2 = new QPushButton(gbRSA);
+        btnRSASave2->setObjectName(QString::fromUtf8("btnRSASave2"));
+
+        horizontalLayout_4->addWidget(btnRSASave2);
 
 
         verticalLayout_2->addLayout(horizontalLayout_4);
 
         plainTextEdit_2 = new QPlainTextEdit(gbRSA);
         plainTextEdit_2->setObjectName(QString::fromUtf8("plainTextEdit_2"));
+        plainTextEdit_2->setReadOnly(true);
 
         verticalLayout_2->addWidget(plainTextEdit_2);
 
@@ -347,9 +361,11 @@ public:
          << QApplication::translate("MainWindow", "8192 bit\303\263w", 0, QApplication::UnicodeUTF8)
         );
         label_6->setText(QApplication::translate("MainWindow", "Klucz publiczny:", 0, QApplication::UnicodeUTF8));
-        btnLoad2->setText(QApplication::translate("MainWindow", "\305\201aduj z pliku", 0, QApplication::UnicodeUTF8));
+        btnRSALoad1->setText(QApplication::translate("MainWindow", "\305\201aduj", 0, QApplication::UnicodeUTF8));
+        btnRSASave1->setText(QApplication::translate("MainWindow", "Zapisz", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("MainWindow", "Klucz prywatny:", 0, QApplication::UnicodeUTF8));
-        btnLoad3->setText(QApplication::translate("MainWindow", "\305\201aduj z pliku", 0, QApplication::UnicodeUTF8));
+        btnRSALoad2->setText(QApplication::translate("MainWindow", "\305\201aduj", 0, QApplication::UnicodeUTF8));
+        btnRSASave2->setText(QApplication::translate("MainWindow", "Zapisz", 0, QApplication::UnicodeUTF8));
         LInput->setText(QApplication::translate("MainWindow", "Tekst wej\305\233ciowy:", 0, QApplication::UnicodeUTF8));
         btnLoad->setText(QApplication::translate("MainWindow", "\305\201aduj z pliku", 0, QApplication::UnicodeUTF8));
         btnCode->setText(QApplication::translate("MainWindow", "Zaszyfruj", 0, QApplication::UnicodeUTF8));

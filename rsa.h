@@ -221,7 +221,7 @@ void encrypt_chunk(mpz_t &cipher, string &message, RSA_PUBLIC pub) {
     EB.append(PS_tab); // EB = 00 || 02 || PS
     EB.append("00");   // EB = 00 || 02 || PS || 00
 
-    for (int i=0; i<message.length(); i++) {
+    for (unsigned int i=0; i<message.length(); i++) {
         EB.append( decbyte2hex((unsigned int)message[i]) );
     } // EB = 00 || 02 || PS || 00 || D
 
@@ -304,7 +304,7 @@ void encrypt(string message, list<string> &cipher, RSA_PUBLIC &pub) {
     // 1024b : 117B
     // 2048b : 245B
     //  and so on ...
-    int length = (pub.length / 8) - 11;
+    unsigned int length = (pub.length / 8) - 11;
 
     // parts = 1 if |msg|==length
     // parts = 2 and more  if  |msg|>length

@@ -57,16 +57,9 @@ void MainWindow::code() {
             break;
         case 3: //RSA
             {
-            //Primes r;
             result = "";
             break;}
-        case 4: //MD5
-            result = "";
-            break;
-        case 5: //DES
-            result = "";
-            break;
-        case 6: //Huffman
+        case 4: //Huffman
             result = "";
             break;
         }
@@ -85,13 +78,7 @@ void MainWindow::code() {
         case 3: //RSA
             result = "";
             break;
-        case 4: //MD5
-            result = "";
-            break;
-        case 5: //DES
-            result = "";
-            break;
-        case 6: //Huffman
+        case 4: //Huffman
             result = "";
             break;
         }
