@@ -38,17 +38,17 @@ MainWindow::MainWindow(QWidget *parent) :
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    status_message(tr("Welcome to Khrypto."));
+    status_message(tr("Welcome to Khrypto."), 4);
 }
 
 void MainWindow::code() {
     QString result;
 
+    //if (ui->tInput->blockCount()==1)
+    //    return;
+
     if (ui->cbAction->currentIndex()==0) {
         //encrypting
-        if (ui->tInput->blockCount()==1)
-            return;
-
         switch (ui->cbMethod->currentIndex()) {
         case 0: //caesar cipher
             result = caesar(ui->tInput->toPlainText(), ui->sbKey->value());
@@ -63,7 +63,7 @@ void MainWindow::code() {
             {
                 list<string> cipher;
 
-                string message = ui->tInput->toPlainText().toUtf8().data();
+                string message = ui->tInput->toPlainText().toLocal8Bit().constData();
                 RSA_encrypt(message, cipher, rsa_pub);
 
                 list<string>::iterator iter;
@@ -79,9 +79,6 @@ void MainWindow::code() {
         }
     } else {
         //decrypting
-        if (ui->tOutput->blockCount()==1)
-            return;
-
         switch (ui->cbMethod->currentIndex()) {
         case 0: //caesar cipher
             result = caesar_undo(ui->tInput->toPlainText(), ui->sbKey->value());
@@ -93,8 +90,19 @@ void MainWindow::code() {
             result = XOR(ui->tInput->toPlainText(), ui->sbKey->value());
             break;
         case 3: //RSA
-            result = "";
-            break;
+            {
+                QString text = ui->tInput->toPlainText();
+                QStringList L = text.split('\n', QString::SkipEmptyParts);
+                list<string> cipher;
+                for (int i=0; i<L.size(); i++) {
+                    cipher.push_back( string(L.at(i).toLocal8Bit().constData()) );
+                }
+
+                string message;
+                RSA_decrypt(message, cipher, rsa_priv);
+                result = message.c_str();
+                break;
+            }
         case 4: //Huffman
             result = "";
             break;
