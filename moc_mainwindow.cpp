@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sun Oct 24 20:21:47 2010
+** Created: Sun Oct 24 22:13:46 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.0)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-       7,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -38,6 +38,10 @@ static const uint qt_meta_data_MainWindow[] = {
       76,   11,   11,   11, 0x08,
       88,   11,   11,   11, 0x08,
      108,   11,   11,   11, 0x08,
+     127,   11,   11,   11, 0x08,
+     142,   11,   11,   11, 0x08,
+     157,   11,   11,   11, 0x08,
+     173,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -46,7 +50,9 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0code()\0method_changed(int)\0"
     "output_textbox_changed()\0save_file()\0"
     "load_file()\0action_changed(int)\0"
-    "generate_RSA_key()\0"
+    "generate_RSA_key()\0load_rsa_pub()\0"
+    "save_rsa_pub()\0load_rsa_priv()\0"
+    "save_rsa_priv()\0"
 };
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -85,9 +91,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 4: load_file(); break;
         case 5: action_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 6: generate_RSA_key(); break;
+        case 7: load_rsa_pub(); break;
+        case 8: save_rsa_pub(); break;
+        case 9: load_rsa_priv(); break;
+        case 10: save_rsa_priv(); break;
         default: ;
         }
-        _id -= 7;
+        _id -= 11;
     }
     return _id;
 }

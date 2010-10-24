@@ -5,7 +5,9 @@ TARGET = khrypto
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
-    rsa.cpp
+    rsa.cpp \
+    ciphers.cpp \
+    rsa_files.cpp
 TRANSLATIONS += khrypto_pl.ts
 HEADERS += mainwindow.h \
     ciphers.h \

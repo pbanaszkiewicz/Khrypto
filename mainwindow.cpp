@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "ciphers.h"
 #include "rsa.h"
+#include "rsa_files.h"
 #include <QFileDialog>
 #include <QFile>
 
@@ -34,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect( ui->btnLoad, SIGNAL(clicked()), this, SLOT(load_file()) );
     connect( ui->btnSave, SIGNAL(clicked()), this, SLOT(save_file()) );
     connect( ui->btnGenerateRSAKey, SIGNAL(clicked()), this, SLOT(generate_RSA_key()) );
+
     
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
@@ -192,6 +194,7 @@ void MainWindow::save_file() {
 void MainWindow::status_message(QString text) {
     status_message( text, 10000);
 }
+
 void MainWindow::status_message(QString text, int time) {
     if (ui->statusBar->currentMessage().size() != 0) ui->statusBar->clearMessage();
 
@@ -213,10 +216,8 @@ void MainWindow::generate_RSA_key() {
             length = 512; break;
     }
 
-    //wygeneruj wartość kluczy
     key_generation(length, rsa_priv, rsa_pub);
 
-    //wpisz te klucze
     //  length || n  || e
     //  length || p  || q  || dP || dQ || qInv
     QString pub_s, priv_s;
@@ -238,7 +239,86 @@ void MainWindow::generate_RSA_key() {
     ui->eRSAPrivate->setPlainText(priv_s);
 }
 
-//void Mia
+void MainWindow::load_rsa_pub() {
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    dialog.setNameFilter(tr("Text documents (*.txt);;All files (*.*)"));
+
+    QStringList file_names;
+    if (dialog.exec()) {
+        file_names = dialog.selectedFiles();
+
+        rsa_pub = load_public_key( file_names[0] );
+
+        //  length || n  || e
+        QString pub_s;
+        QTextStream pub(&pub_s);
+
+        pub << rsa_pub.length
+            << "\n\n" << mpz_get_str(NULL, 16, rsa_pub.n)
+            << "\n\n" << mpz_get_str(NULL, 10, rsa_pub.e);
+
+        ui->eRSAPublic->clear();
+        ui->eRSAPublic->setPlainText(pub_s);
+        status_message(tr("Key loaded from file ") + file_names[0]);
+    }
+}
+
+void MainWindow::save_rsa_pub() {
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setNameFilter(tr("Text documents (*.txt);;All files (*.*)"));
+
+    QStringList file_names;
+    if (dialog.exec()) {
+        file_names = dialog.selectedFiles();
+
+        save_public_key(rsa_pub, file_names[0]);
+        status_message(tr("Key saved to file ") + file_names[0]);
+    }
+}
+
+void MainWindow::load_rsa_priv() {
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    dialog.setNameFilter(tr("Text documents (*.txt);;All files (*.*)"));
+
+    QStringList file_names;
+    if (dialog.exec()) {
+        file_names = dialog.selectedFiles();
+
+        rsa_priv = load_private_key( file_names[0] );
+
+        //  length || p  || q  || dP || dQ || qInv
+        QString priv_s;
+        QTextStream priv(&priv_s);
+
+        priv << rsa_priv.length
+             << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.p)
+             << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.q)
+             << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.dP)
+             << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.dQ)
+             << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.qInv);
+
+        ui->eRSAPrivate->clear();
+        ui->eRSAPrivate->setPlainText(priv_s);
+        status_message(tr("Key loaded from file ") + file_names[0]);
+    }
+}
+
+void MainWindow::save_rsa_priv() {
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setNameFilter(tr("Text documents (*.txt);;All files (*.*)"));
+
+    QStringList file_names;
+    if (dialog.exec()) {
+        file_names = dialog.selectedFiles();
+
+        save_private_key(rsa_priv, file_names[0]);
+        status_message(tr("Key saved to file ") + file_names[0]);
+    }
+}
 
 MainWindow::~MainWindow()
 {

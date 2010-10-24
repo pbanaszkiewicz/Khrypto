@@ -32,6 +32,11 @@ private slots:
     void load_file(); //btnLoad.clicked()
     void action_changed(int); //cbAction.currentIndexChanged(int)
     void generate_RSA_key(); //btnGenerateRSAKey.clicked()
+    void load_rsa_pub(); //btnRSALoad1.clicked()
+    void save_rsa_pub(); //btnRSASave1.clicked()
+    void load_rsa_priv(); //btnRSALoad2.clicked()
+    void save_rsa_priv(); //btnRSASave2.clicked()
+
 };
 
 #endif // MAINWINDOW_H
