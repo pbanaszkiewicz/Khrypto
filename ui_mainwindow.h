@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri Oct 15 21:33:12 2010
+** Created: Sun Oct 24 19:42:34 2010
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -53,17 +53,17 @@ public:
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_6;
     QPushButton *btnGenerateRSAKey;
-    QComboBox *comboBox;
+    QComboBox *cbKeyLenghts;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_6;
     QPushButton *btnRSALoad1;
     QPushButton *btnRSASave1;
-    QPlainTextEdit *plainTextEdit;
+    QPlainTextEdit *eRSAPublic;
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_5;
     QPushButton *btnRSALoad2;
     QPushButton *btnRSASave2;
-    QPlainTextEdit *plainTextEdit_2;
+    QPlainTextEdit *eRSAPrivate;
     QSpacerItem *verticalSpacer;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
@@ -165,10 +165,10 @@ public:
 
         horizontalLayout_6->addWidget(btnGenerateRSAKey);
 
-        comboBox = new QComboBox(gbRSA);
-        comboBox->setObjectName(QString::fromUtf8("comboBox"));
+        cbKeyLenghts = new QComboBox(gbRSA);
+        cbKeyLenghts->setObjectName(QString::fromUtf8("cbKeyLenghts"));
 
-        horizontalLayout_6->addWidget(comboBox);
+        horizontalLayout_6->addWidget(cbKeyLenghts);
 
 
         verticalLayout_2->addLayout(horizontalLayout_6);
@@ -194,11 +194,11 @@ public:
 
         verticalLayout_2->addLayout(horizontalLayout_5);
 
-        plainTextEdit = new QPlainTextEdit(gbRSA);
-        plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
-        plainTextEdit->setReadOnly(true);
+        eRSAPublic = new QPlainTextEdit(gbRSA);
+        eRSAPublic->setObjectName(QString::fromUtf8("eRSAPublic"));
+        eRSAPublic->setReadOnly(true);
 
-        verticalLayout_2->addWidget(plainTextEdit);
+        verticalLayout_2->addWidget(eRSAPublic);
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setSpacing(6);
@@ -221,11 +221,11 @@ public:
 
         verticalLayout_2->addLayout(horizontalLayout_4);
 
-        plainTextEdit_2 = new QPlainTextEdit(gbRSA);
-        plainTextEdit_2->setObjectName(QString::fromUtf8("plainTextEdit_2"));
-        plainTextEdit_2->setReadOnly(true);
+        eRSAPrivate = new QPlainTextEdit(gbRSA);
+        eRSAPrivate->setObjectName(QString::fromUtf8("eRSAPrivate"));
+        eRSAPrivate->setReadOnly(true);
 
-        verticalLayout_2->addWidget(plainTextEdit_2);
+        verticalLayout_2->addWidget(eRSAPrivate);
 
 
         verticalLayout_3->addWidget(gbRSA);
@@ -320,7 +320,7 @@ public:
         retranslateUi(MainWindow);
         QObject::connect(actionExit, SIGNAL(triggered()), MainWindow, SLOT(close()));
 
-        comboBox->setCurrentIndex(0);
+        cbKeyLenghts->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -329,8 +329,8 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Khrypto", 0, QApplication::UnicodeUTF8));
-        actionGenerate_random_key->setText(QApplication::translate("MainWindow", "Generate random key", 0, QApplication::UnicodeUTF8));
-        actionExit->setText(QApplication::translate("MainWindow", "Exit", 0, QApplication::UnicodeUTF8));
+        actionGenerate_random_key->setText(QApplication::translate("MainWindow", "&Generate random key", 0, QApplication::UnicodeUTF8));
+        actionExit->setText(QApplication::translate("MainWindow", "&Exit", 0, QApplication::UnicodeUTF8));
         gbSettings->setTitle(QApplication::translate("MainWindow", "Settings", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Method", 0, QApplication::UnicodeUTF8));
         cbMethod->clear();
@@ -344,14 +344,14 @@ public:
         label_2->setText(QApplication::translate("MainWindow", "Action", 0, QApplication::UnicodeUTF8));
         cbAction->clear();
         cbAction->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "Zaszyfrowanie", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("MainWindow", "Odszyfrowanie", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("MainWindow", "Encrypting", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("MainWindow", "Decrypting", 0, QApplication::UnicodeUTF8)
         );
         label_3->setText(QApplication::translate("MainWindow", "Key", 0, QApplication::UnicodeUTF8));
         gbRSA->setTitle(QApplication::translate("MainWindow", "RSA", 0, QApplication::UnicodeUTF8));
         btnGenerateRSAKey->setText(QApplication::translate("MainWindow", "Generate key", 0, QApplication::UnicodeUTF8));
-        comboBox->clear();
-        comboBox->insertItems(0, QStringList()
+        cbKeyLenghts->clear();
+        cbKeyLenghts->insertItems(0, QStringList()
          << QApplication::translate("MainWindow", "512 bits", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("MainWindow", "1024 bits", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("MainWindow", "2048 bits", 0, QApplication::UnicodeUTF8)
@@ -369,7 +369,7 @@ public:
         btnCode->setText(QApplication::translate("MainWindow", "Encrypt", 0, QApplication::UnicodeUTF8));
         LOutput->setText(QApplication::translate("MainWindow", "Output text:", 0, QApplication::UnicodeUTF8));
         btnSave->setText(QApplication::translate("MainWindow", "Save to file", 0, QApplication::UnicodeUTF8));
-        menuApplication->setTitle(QApplication::translate("MainWindow", "Application", 0, QApplication::UnicodeUTF8));
+        menuApplication->setTitle(QApplication::translate("MainWindow", "&Application", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

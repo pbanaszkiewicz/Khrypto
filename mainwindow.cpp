@@ -13,10 +13,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     srand(time(NULL));
 
-    //settings
-    //schowaj co zbędne -> ładowanie kluczy etc
+    // settings
+    // hide redundant objects -> keys loading etc.
 
-    //odblokuj co trzeba
+    // enable what needed
     ui->cbAction->setEnabled(true);
     ui->tInput->setEnabled(true);
     ui->tOutput->setEnabled(true);
@@ -26,18 +26,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->gbRSA->hide();
     ui->btnSave->setDisabled(true);
 
-    //slots
+    // slots
     connect( ui->btnCode, SIGNAL(clicked()), this, SLOT(code()) );
-    connect( ui->cbMethod,SIGNAL(currentIndexChanged(int)), this, SLOT(method_changed(int)));
-    connect( ui->cbAction,SIGNAL(currentIndexChanged(int)), this, SLOT(action_changed(int)));
-    connect( ui->tOutput, SIGNAL(textChanged()), this, SLOT(output_textbox_changed()));
-    connect( ui->btnLoad, SIGNAL(clicked()), this, SLOT(load_file()));
-    connect( ui->btnSave, SIGNAL(clicked()), this, SLOT(save_file()));
+    connect( ui->cbMethod,SIGNAL(currentIndexChanged(int)), this, SLOT(method_changed(int)) );
+    connect( ui->cbAction,SIGNAL(currentIndexChanged(int)), this, SLOT(action_changed(int)) );
+    connect( ui->tOutput, SIGNAL(textChanged()), this, SLOT(output_textbox_changed()) );
+    connect( ui->btnLoad, SIGNAL(clicked()), this, SLOT(load_file()) );
+    connect( ui->btnSave, SIGNAL(clicked()), this, SLOT(save_file()) );
+    connect( ui->btnGenerateRSAKey, SIGNAL(clicked()), this, SLOT(generate_RSA_key()) );
     
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    status_message(tr("Witaj w programie Khrypto."));
+    status_message(tr("Welcome to Khrypto."));
 }
 
 void MainWindow::code() {
@@ -45,6 +46,9 @@ void MainWindow::code() {
 
     if (ui->cbAction->currentIndex()==0) {
         //encrypting
+        if (ui->tInput->blockCount()==1)
+            return;
+
         switch (ui->cbMethod->currentIndex()) {
         case 0: //caesar cipher
             result = caesar(ui->tInput->toPlainText(), ui->sbKey->value());
@@ -57,14 +61,27 @@ void MainWindow::code() {
             break;
         case 3: //RSA
             {
-            result = "";
-            break;}
+                list<string> cipher;
+
+                string message = ui->tInput->toPlainText().toUtf8().data();
+                RSA_encrypt(message, cipher, rsa_pub);
+
+                list<string>::iterator iter;
+                QTextStream t(&result);
+                for (iter=cipher.begin(); iter!=cipher.end(); iter++) {
+                    t << (*iter).c_str() << "\n";
+                }
+                break;
+            }
         case 4: //Huffman
             result = "";
             break;
         }
     } else {
         //decrypting
+        if (ui->tOutput->blockCount()==1)
+            return;
+
         switch (ui->cbMethod->currentIndex()) {
         case 0: //caesar cipher
             result = caesar_undo(ui->tInput->toPlainText(), ui->sbKey->value());
@@ -93,11 +110,7 @@ void MainWindow::method_changed(int index) {
     ui->sbKey->setEnabled(true);
     ui->gbRSA->setDisabled(true);
     ui->gbRSA->hide();
-    if (index==4) {
-        ui->cbAction->setCurrentIndex(0);
-        ui->cbAction->setDisabled(true);
-        ui->sbKey->setDisabled(true);
-    } else if (index==3) {
+    if (index==3) {
         ui->sbKey->setDisabled(true);
         ui->gbRSA->setEnabled(true);
         ui->gbRSA->show();
@@ -124,7 +137,7 @@ void MainWindow::output_textbox_changed() {
 void MainWindow::load_file() {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::ExistingFile);
-    dialog.setNameFilter(tr("Dokumenty tekstowe (*.txt);;Wszystkie pliki (*.*)"));
+    dialog.setNameFilter(tr("Text documents (*.txt);;All files (*.*)"));
 
     QStringList file_names;
     if (dialog.exec()) {
@@ -132,14 +145,13 @@ void MainWindow::load_file() {
 
         QFile file( file_names[0] );
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            // TODO: wyświetlanie błędu na StatusBarze (osobna funkcja)
-            status_message(tr("Błąd: nie można otworzyć pliku ") + file_names[0]);
+            status_message(tr("Error: cannot open the file ") + file_names[0]);
             return;
         }
 
         ui->tInput->clear();
         ui->tInput->setPlainText( QString( file.readAll() ) );
-        status_message(tr("Załadowano plik ") + file_names[0]);
+        status_message(tr("Loaded file ") + file_names[0]);
 
         file.close();
     }
@@ -148,7 +160,7 @@ void MainWindow::load_file() {
 void MainWindow::save_file() {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::AnyFile);
-    dialog.setNameFilter(tr("Dokumenty tekstowe (*.txt);;Wszystkie pliki (*.*)"));
+    dialog.setNameFilter(tr("Text documents (*.txt);;All files (*.*)"));
 
     QStringList file_names;
     if (dialog.exec()) {
@@ -156,8 +168,7 @@ void MainWindow::save_file() {
 
         QFile file( file_names[0] );
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            // TODO: wyświetlanie błędu na StatusBarze (osobna funkcja)
-            status_message(tr("Błąd: nie można otworzyć pliku ") + file_names[0]);
+            status_message(tr("Error: cannot open the file ") + file_names[0]);
             return;
         }
 
@@ -166,7 +177,7 @@ void MainWindow::save_file() {
         file.write(ar);
 
         file.close();
-        status_message(tr("Zapisano do pliku ") + file_names[0]);
+        status_message(tr("Saved to file ") + file_names[0]);
     }
 }
 
@@ -178,6 +189,48 @@ void MainWindow::status_message(QString text, int time) {
 
     ui->statusBar->showMessage( text, time );
 }
+
+void MainWindow::generate_RSA_key() {
+    int length;
+    switch (ui->cbKeyLenghts->currentIndex()) {
+        case 1:
+            length = 1024; break;
+        case 2:
+            length = 2048; break;
+        case 3:
+            length = 4096; break;
+        case 4:
+            length = 8192; break;
+        default:
+            length = 512; break;
+    }
+
+    //wygeneruj wartość kluczy
+    key_generation(length, rsa_priv, rsa_pub);
+
+    //wpisz te klucze
+    //  length || n  || e
+    //  length || p  || q  || dP || dQ || qInv
+    QString pub_s, priv_s;
+    QTextStream pub(&pub_s), priv(&priv_s);
+
+    pub << rsa_pub.length
+        << "\n\n" << mpz_get_str(NULL, 16, rsa_pub.n)
+        << "\n\n" << mpz_get_str(NULL, 10, rsa_pub.e);
+    priv << rsa_priv.length
+         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.p)
+         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.q)
+         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.dP)
+         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.dQ)
+         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.qInv);
+
+    ui->eRSAPublic->clear();
+    ui->eRSAPrivate->clear();
+    ui->eRSAPublic->setPlainText(pub_s);
+    ui->eRSAPrivate->setPlainText(priv_s);
+}
+
+//void Mia
 
 MainWindow::~MainWindow()
 {

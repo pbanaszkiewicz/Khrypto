@@ -1,6 +1,7 @@
 #ifndef RSA_FILES_H
 #define RSA_FILES_H
 
+
 #include <QString>
 #include <QFile>
 #include <QIODevice>
@@ -16,7 +17,7 @@
 RSA_PUBLIC load_public_key(QString filename) {
     // file has format:
     //  length || n  || e
-    // where "||" corresponds to "\n\n"
+    // where "||" corresponds to "\n"
     // bases:
     //      10 || 16 || 16
     RSA_PUBLIC pub;
@@ -31,6 +32,13 @@ RSA_PUBLIC load_public_key(QString filename) {
     QByteArray line;
     while ( !file.atEnd() ) {
         line = file.readLine();
+        // check the end of the line (we don't want "\r" nor "\n")
+        if (line.endsWith(char(10))) {
+            line.chop(1);
+        }
+        if (line.endsWith(char(13))) {
+            line.chop(1);
+        }
         lines.append( line );
     }
 
@@ -55,7 +63,7 @@ RSA_PUBLIC load_public_key(QString filename) {
     }
 
     // reads e
-    if ( mpz_set_str(pub.e, lines[1].data(), 16) != 0 ) {
+    if ( mpz_set_str(pub.e, lines[2].data(), 16) != 0 ) {
         // throw exception should be here
         file.close();
         return;
@@ -73,7 +81,7 @@ RSA_PUBLIC load_public_key(QString filename) {
 RSA_PRIVATE load_private_key(QString filename) {
     // file has format:
     //  length || p  || q  || dP || dQ || qInv
-    // where "||" corresponds to "\n\n"
+    // where "||" corresponds to "\n"
     // bases:
     //      10 || 16 || 16 || 16 || 16 || 16
     RSA_PRIVATE priv;
@@ -88,6 +96,13 @@ RSA_PRIVATE load_private_key(QString filename) {
     QByteArray line;
     while ( !file.atEnd() ) {
         line = file.readLine();
+        // check the end of the line (we don't want "\r" nor "\n")
+        if (line.endsWith(char(10))) {  // "\n"
+            line.chop(1);
+        }
+        if (line.endsWith(char(13))) {  // "\r"
+            line.chop(1);
+        }
         lines.append( line );
     }
 
@@ -150,7 +165,7 @@ RSA_PRIVATE load_private_key(QString filename) {
 void save_public_key(RSA_PUBLIC &pub, QString filename) {
     // file has format:
     //  length || n  || e
-    // where "||" corresponds to "\n\n"
+    // where "||" corresponds to "\n"
     // bases:
     //      10 || 16 || 16
 
@@ -163,7 +178,8 @@ void save_public_key(RSA_PUBLIC &pub, QString filename) {
     QTextStream out( &file );
 
     // writes length
-    out << mpz_get_str(NULL, 10, pub.length) << "\n";
+    //out << mpz_get_str(NULL, 10, pub.length) << "\n";
+    out << pub.length << "\n";
 
     // writes n
     out << mpz_get_str(NULL, 16, pub.n) << "\n";
@@ -187,7 +203,7 @@ void save_public_key(RSA_PUBLIC &pub, QString filename) {
 void save_private_key(RSA_PRIVATE &priv, QString filename) {
     // file has format:
     //  length || p  || q  || dP || dQ || qInv
-    // where "||" corresponds to "\n\n"
+    // where "||" corresponds to "\n"
     // bases:
     //      10 || 16 || 16 || 16 || 16 || 16
 
@@ -200,7 +216,8 @@ void save_private_key(RSA_PRIVATE &priv, QString filename) {
     QTextStream out( &file );
 
     // writes length
-    out << mpz_get_str(NULL, 10, priv.length) << "\n";
+    //out << mpz_get_str(NULL, 10, priv.length) << "\n";
+    out << priv.length << "\n";
 
     // writes p
     out << mpz_get_str(NULL, 16, priv.p) << "\n";

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "rsa.h"
 
 namespace Ui {
     class MainWindow;
@@ -20,6 +21,8 @@ private:
     Ui::MainWindow *ui;
     void status_message(QString);
     void status_message(QString, int);
+    RSA_PUBLIC rsa_pub;
+    RSA_PRIVATE rsa_priv;
 
 private slots:
     void code(); //btnCode.clicked()
@@ -28,6 +31,7 @@ private slots:
     void save_file(); //btnSave.clicked()
     void load_file(); //btnLoad.clicked()
     void action_changed(int); //cbAction.currentIndexChanged(int)
+    void generate_RSA_key(); //btnGenerateRSAKey.clicked()
 };
 
 #endif // MAINWINDOW_H
