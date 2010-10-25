@@ -16,3 +16,6 @@ HEADERS += mainwindow.h \
     huffman.h
 FORMS += mainwindow.ui
 RESOURCES +=
+
+OTHER_FILES += \
+    LICENSE.txt

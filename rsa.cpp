@@ -1,4 +1,21 @@
+/*  This file is part of Khrypto.
+
+    Khrypto is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Khrypto is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Khrypto.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "rsa.h"
+
 
 /* int random(unsigned int)
  * fastest function for generating random values I found
@@ -154,11 +171,11 @@ void key_generation(int length, RSA_PRIVATE &priv, RSA_PUBLIC &pub) {
 }
 
 
-/*TODO LIST:
-  3. wprowadzić session key?
-  4. wprowadzić PKCS#1 w wersji 2.1?
-  5. IMPROVE YOUR DOCS!!!
-  */
+/* TODO:
+ * 1. include session key?
+ * 2. introduce PKCS#1 v2.1?
+ */
+
 
 /* void RSA_encrypt_chunk(mpz_t, string, RSA_PUBLIC)
  * encrypts one part of message using one's public key, part fits the

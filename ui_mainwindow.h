@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Oct 24 19:42:34 2010
+** Created: Mon Oct 25 18:35:53 2010
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -92,6 +92,7 @@ public:
         MainWindow->setUnifiedTitleAndToolBarOnMac(true);
         actionGenerate_random_key = new QAction(MainWindow);
         actionGenerate_random_key->setObjectName(QString::fromUtf8("actionGenerate_random_key"));
+        actionGenerate_random_key->setEnabled(true);
         actionExit = new QAction(MainWindow);
         actionExit->setObjectName(QString::fromUtf8("actionExit"));
         centralWidget = new QWidget(MainWindow);
@@ -320,7 +321,8 @@ public:
         retranslateUi(MainWindow);
         QObject::connect(actionExit, SIGNAL(triggered()), MainWindow, SLOT(close()));
 
-        cbKeyLenghts->setCurrentIndex(0);
+        cbMethod->setCurrentIndex(0);
+        cbKeyLenghts->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

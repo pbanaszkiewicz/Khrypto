@@ -1,3 +1,19 @@
+/*  This file is part of Khrypto.
+
+    Khrypto is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Khrypto is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Khrypto.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "ciphers.h"
@@ -6,6 +22,16 @@
 #include <QFileDialog>
 #include <QFile>
 
+
+// TODO:
+// - update translation
+// - make clever status_message acting due to error or success
+// - make threads
+
+
+/* MainWindow::MainWindow(QWidget)
+ * constructor of the Khrypto's main window
+ */
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -16,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // settings
     // hide redundant objects -> keys loading etc.
+    rsa_pub.length = 0;
+    rsa_priv.length = 0;
 
     // enable what needed
     ui->cbAction->setEnabled(true);
@@ -35,6 +63,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect( ui->btnLoad, SIGNAL(clicked()), this, SLOT(load_file()) );
     connect( ui->btnSave, SIGNAL(clicked()), this, SLOT(save_file()) );
     connect( ui->btnGenerateRSAKey, SIGNAL(clicked()), this, SLOT(generate_RSA_key()) );
+    connect( ui->btnRSALoad1,SIGNAL(clicked()),this,SLOT(load_rsa_pub()) );
+    connect( ui->btnRSASave1,SIGNAL(clicked()),this,SLOT(save_rsa_pub()) );
+    connect( ui->btnRSALoad2,SIGNAL(clicked()),this,SLOT(load_rsa_priv()) );
+    connect( ui->btnRSASave2,SIGNAL(clicked()),this,SLOT(save_rsa_priv()) );
+    connect( ui->actionGenerate_random_key,SIGNAL(triggered()),this,SLOT(generate_random_key()) );
 
     
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
@@ -43,14 +76,23 @@ MainWindow::MainWindow(QWidget *parent) :
     status_message(tr("Welcome to Khrypto."), 4);
 }
 
+
+/* void MainWindow::code()
+ * @btnCode.clicked()
+ * generates cipher or turns cipher into primary form
+ */
 void MainWindow::code() {
     QString result;
 
-    //if (ui->tInput->blockCount()==1)
-    //    return;
+    if (ui->tInput->toPlainText().length()==0) {
+        status_message(tr("You should enter any text to the input box"));
+        return;
+    }
 
     if (ui->cbAction->currentIndex()==0) {
         //encrypting
+        status_message(tr("Encrypting, please wait"));
+
         switch (ui->cbMethod->currentIndex()) {
         case 0: //caesar cipher
             result = caesar(ui->tInput->toPlainText(), ui->sbKey->value());
@@ -63,6 +105,11 @@ void MainWindow::code() {
             break;
         case 3: //RSA
             {
+                if (rsa_pub.length == 0) {
+                    status_message(tr("You must first specify the public key"));
+                    break;
+                }
+
                 list<string> cipher;
 
                 string message = ui->tInput->toPlainText().toLocal8Bit().constData();
@@ -81,6 +128,8 @@ void MainWindow::code() {
         }
     } else {
         //decrypting
+        status_message(tr("Decrypting, please wait"));
+
         switch (ui->cbMethod->currentIndex()) {
         case 0: //caesar cipher
             result = caesar_undo(ui->tInput->toPlainText(), ui->sbKey->value());
@@ -93,6 +142,11 @@ void MainWindow::code() {
             break;
         case 3: //RSA
             {
+                if (rsa_priv.length == 0) {
+                    status_message(tr("You must first specify the private key"));
+                    break;
+                }
+
                 QString text = ui->tInput->toPlainText();
                 QStringList L = text.split('\n', QString::SkipEmptyParts);
                 list<string> cipher;
@@ -110,32 +164,51 @@ void MainWindow::code() {
             break;
         }
     }
-
     ui->tOutput->setPlainText(result);
+
+    clear_status_message();
 }
 
+
+/* void MainWindow::method_changed(int)
+ * @cbMethod.currentIndexChanged(int)
+ * (en|dis)ables inputs or boxes according to the method used (RSA, Caezar etc)
+ */
 void MainWindow::method_changed(int index) {
-    // TODO: change this to switch statement
     ui->cbAction->setEnabled(true);
     ui->sbKey->setEnabled(true);
+    ui->actionGenerate_random_key->setEnabled(true);
     ui->gbRSA->setDisabled(true);
     ui->gbRSA->hide();
-    if (index==3) {
+    if (index==3) { //RSA
         ui->sbKey->setDisabled(true);
+        ui->actionGenerate_random_key->setDisabled(true);
         ui->gbRSA->setEnabled(true);
         ui->gbRSA->show();
     }
 }
 
+
+/* void MainWindow::action_changed(int)
+ * @cbAction.currentIndexChanged(int)
+ * changes text on the Encrypt/Decrypt button
+ */
 void MainWindow::action_changed(int index) {
-    // TODO: change this to the switch statement
-    if (index==0) {
+    switch (index) {
+    case 0:
         ui->btnCode->setText(tr("Encrypt"));
-    } else if (index==1) {
+        break;
+    case 1:
         ui->btnCode->setText(tr("Decrypt"));
+        break;
     }
 }
 
+
+/* void MainWindow::output_textbox_changed()
+ * @tOutput.textChanged()
+ * enables or disables the save button
+ */
 void MainWindow::output_textbox_changed() {
     if (ui->tOutput->toPlainText().size() != 0) {
         ui->btnSave->setEnabled(true);
@@ -144,6 +217,11 @@ void MainWindow::output_textbox_changed() {
     }
 }
 
+
+/* void MainWindow::load_file()
+ * @btnLoad.clicked()
+ * opens dialog to pick the file which will be loaded as input text
+ */
 void MainWindow::load_file() {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::ExistingFile);
@@ -167,6 +245,11 @@ void MainWindow::load_file() {
     }
 }
 
+
+/* void MainWindow::save_file()
+ * @btnSave.clicked()
+ * opens dialog to save the file with output contents
+ */
 void MainWindow::save_file() {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::AnyFile);
@@ -191,17 +274,77 @@ void MainWindow::save_file() {
     }
 }
 
+
+/* void MainWindow::status_message(QString)
+ * shows message on the status bar
+ */
 void MainWindow::status_message(QString text) {
     status_message( text, 10000);
 }
 
+
+/* void MainWindow::status_message(QString, int)
+ * shows message on the status bar but for specified time
+ */
 void MainWindow::status_message(QString text, int time) {
     if (ui->statusBar->currentMessage().size() != 0) ui->statusBar->clearMessage();
 
     ui->statusBar->showMessage( text, time );
 }
 
+
+/* void MainWindow::clear_status_message()
+ * clears message on the status bar
+ */
+void MainWindow::clear_status_message() {
+    ui->statusBar->clearMessage();
+}
+
+
+/* void MainWindow::present_rsa_public()
+ * shows RSA Public Key in specified format in the textbox
+ */
+void MainWindow::present_rsa_public() {
+    //  length || n  || e
+    QString pub_s;
+    QTextStream pub(&pub_s);
+
+    pub << rsa_pub.length
+        << "\n\n" << mpz_get_str(NULL, 16, rsa_pub.n)
+        << "\n\n" << mpz_get_str(NULL, 10, rsa_pub.e);
+
+    ui->eRSAPublic->clear();
+    ui->eRSAPublic->setPlainText(pub_s);
+}
+
+
+/* void MainWindow::present_rsa_private()
+ * shows RSA Private Key in specified format in the textbox
+ */
+void MainWindow::present_rsa_private() {
+    //  length || p  || q  || dP || dQ || qInv
+    QString priv_s;
+    QTextStream priv(&priv_s);
+
+    priv << rsa_priv.length
+         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.p)
+         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.q)
+         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.dP)
+         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.dQ)
+         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.qInv);
+
+    ui->eRSAPrivate->clear();
+    ui->eRSAPrivate->setPlainText(priv_s);
+}
+
+
+/* void MainWindow::generate_RSA_key()
+ * @btnGenerateRSAKey.clicked()
+ * this function generates specified RSA keys and presents them
+ */
 void MainWindow::generate_RSA_key() {
+    status_message(tr("Generating RSA keys, please wait"));
+
     int length;
     switch (ui->cbKeyLenghts->currentIndex()) {
         case 1:
@@ -218,27 +361,17 @@ void MainWindow::generate_RSA_key() {
 
     key_generation(length, rsa_priv, rsa_pub);
 
-    //  length || n  || e
-    //  length || p  || q  || dP || dQ || qInv
-    QString pub_s, priv_s;
-    QTextStream pub(&pub_s), priv(&priv_s);
+    present_rsa_public();
+    present_rsa_private();
 
-    pub << rsa_pub.length
-        << "\n\n" << mpz_get_str(NULL, 16, rsa_pub.n)
-        << "\n\n" << mpz_get_str(NULL, 10, rsa_pub.e);
-    priv << rsa_priv.length
-         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.p)
-         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.q)
-         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.dP)
-         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.dQ)
-         << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.qInv);
-
-    ui->eRSAPublic->clear();
-    ui->eRSAPrivate->clear();
-    ui->eRSAPublic->setPlainText(pub_s);
-    ui->eRSAPrivate->setPlainText(priv_s);
+    clear_status_message();
 }
 
+
+/* void MainWindow::load_rsa_pub()
+ * @btnRSALoad1.clicked()
+ * opens dialog to pick the file with RSA Public Key
+ */
 void MainWindow::load_rsa_pub() {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::ExistingFile);
@@ -248,22 +381,24 @@ void MainWindow::load_rsa_pub() {
     if (dialog.exec()) {
         file_names = dialog.selectedFiles();
 
-        rsa_pub = load_public_key( file_names[0] );
+        try {
+            rsa_pub = load_public_key( file_names[0] );
 
-        //  length || n  || e
-        QString pub_s;
-        QTextStream pub(&pub_s);
+            present_rsa_public();
 
-        pub << rsa_pub.length
-            << "\n\n" << mpz_get_str(NULL, 16, rsa_pub.n)
-            << "\n\n" << mpz_get_str(NULL, 10, rsa_pub.e);
+            status_message(tr("Key loaded from file ") + file_names[0]);
 
-        ui->eRSAPublic->clear();
-        ui->eRSAPublic->setPlainText(pub_s);
-        status_message(tr("Key loaded from file ") + file_names[0]);
+        } catch (IOErrorException const & e) {
+            status_message(tr("Cannot load key from file ") + file_names[0]);
+        }
     }
 }
 
+
+/* void MainWindow::save_rsa_pub()
+ * @btnRSASave1.clicked()
+ * opens dialog to save the file with RSA Public Key
+ */
 void MainWindow::save_rsa_pub() {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::AnyFile);
@@ -273,11 +408,22 @@ void MainWindow::save_rsa_pub() {
     if (dialog.exec()) {
         file_names = dialog.selectedFiles();
 
-        save_public_key(rsa_pub, file_names[0]);
-        status_message(tr("Key saved to file ") + file_names[0]);
+        try {
+            save_public_key(rsa_pub, file_names[0]);
+            status_message(tr("Key saved to file ") + file_names[0]);
+
+        } catch (IOErrorException const & e) {
+            status_message(tr("Cannot save key to file ") + file_names[0]);
+        }
+
     }
 }
 
+
+/* void MainWindow::load_rsa_priv()
+ * @btnRSALoad2.clicked()
+ * opens dialog to pick the file with RSA Private Key
+ */
 void MainWindow::load_rsa_priv() {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::ExistingFile);
@@ -287,25 +433,24 @@ void MainWindow::load_rsa_priv() {
     if (dialog.exec()) {
         file_names = dialog.selectedFiles();
 
-        rsa_priv = load_private_key( file_names[0] );
+        try {
+            rsa_priv = load_private_key( file_names[0] );
 
-        //  length || p  || q  || dP || dQ || qInv
-        QString priv_s;
-        QTextStream priv(&priv_s);
+            present_rsa_private();
 
-        priv << rsa_priv.length
-             << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.p)
-             << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.q)
-             << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.dP)
-             << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.dQ)
-             << "\n\n" << mpz_get_str(NULL, 16, rsa_priv.qInv);
+            status_message(tr("Key loaded from file ") + file_names[0]);
 
-        ui->eRSAPrivate->clear();
-        ui->eRSAPrivate->setPlainText(priv_s);
-        status_message(tr("Key loaded from file ") + file_names[0]);
+        } catch (IOErrorException const & e) {
+            status_message(tr("Cannot load key from file ") + file_names[0]);
+        }
     }
 }
 
+
+/* void MainWindow::save_rsa_priv()
+ * @btnRSASave2.clicked()
+ * opens dialog to save the file with RSA Private Key
+ */
 void MainWindow::save_rsa_priv() {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::AnyFile);
@@ -315,15 +460,33 @@ void MainWindow::save_rsa_priv() {
     if (dialog.exec()) {
         file_names = dialog.selectedFiles();
 
-        save_private_key(rsa_priv, file_names[0]);
-        status_message(tr("Key saved to file ") + file_names[0]);
+        try {
+            save_private_key(rsa_priv, file_names[0]);
+            status_message(tr("Key saved to file ") + file_names[0]);
+        } catch (IOErrorException const & e) {
+            status_message(tr("Cannot save key to file ") + file_names[0]);
+        }
     }
 }
 
+
+/* void MainWindow::generate_random_key()
+ * @actionGenerate_random_key.triggered()
+ * generates any random key
+ */
+void MainWindow::generate_random_key() {
+    ui->sbKey->setValue( rand() % ui->sbKey->maximum() );
+}
+
+
+/* MainWindow::~MainWindow()
+ * Khrypto's main window destructor
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 
 void MainWindow::changeEvent(QEvent *e)
 {
