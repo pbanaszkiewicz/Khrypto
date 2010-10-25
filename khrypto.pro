@@ -18,4 +18,12 @@ FORMS += mainwindow.ui
 RESOURCES +=
 
 OTHER_FILES += \
-    LICENSE.txt
+    LICENSE.txt \
+    khrypto_pl.ts \
+    khrypto_pl.qm \
+    icon2.xcf \
+    icon2.png \
+    icon2_2.png \
+    icon2_2.ico \
+    icon.ico \
+    README
