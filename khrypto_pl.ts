@@ -35,127 +35,126 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="66"/>
-        <location filename="mainwindow.ui" line="128"/>
+        <location filename="mainwindow.ui" line="123"/>
         <source>RSA</source>
         <translation>RSA</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="71"/>
         <source>Huffman</source>
-        <translation>Huffman</translation>
+        <translation type="obsolete">Huffman</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="79"/>
+        <location filename="mainwindow.ui" line="74"/>
         <source>Action</source>
         <translation>Działanie</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="90"/>
+        <location filename="mainwindow.ui" line="85"/>
         <source>Encrypting</source>
         <translation>Szyfrowanie</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="95"/>
+        <location filename="mainwindow.ui" line="90"/>
         <source>Decrypting</source>
         <translation>Deszyfrowanie</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="103"/>
+        <location filename="mainwindow.ui" line="98"/>
         <source>Key</source>
         <translation>Klucz</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="139"/>
+        <location filename="mainwindow.ui" line="134"/>
         <source>Generate key</source>
         <translation>Generuj klucz</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="150"/>
+        <location filename="mainwindow.ui" line="145"/>
         <source>512 bits</source>
         <translation>512 bitów</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="155"/>
+        <location filename="mainwindow.ui" line="150"/>
         <source>1024 bits</source>
         <translation>1024 bity</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="160"/>
+        <location filename="mainwindow.ui" line="155"/>
         <source>2048 bits</source>
         <translation>2048 bitów</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="165"/>
+        <location filename="mainwindow.ui" line="160"/>
         <source>4096 bits</source>
         <translation>4096 bitów</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="170"/>
+        <location filename="mainwindow.ui" line="165"/>
         <source>8192 bits</source>
         <translation>8192 bity</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="182"/>
+        <location filename="mainwindow.ui" line="177"/>
         <source>Public key:</source>
         <translation>Klucz publiczny:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="189"/>
-        <location filename="mainwindow.ui" line="221"/>
+        <location filename="mainwindow.ui" line="184"/>
+        <location filename="mainwindow.ui" line="216"/>
         <source>Load</source>
         <translation>Ładuj</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="196"/>
-        <location filename="mainwindow.ui" line="228"/>
+        <location filename="mainwindow.ui" line="191"/>
+        <location filename="mainwindow.ui" line="223"/>
         <source>Save</source>
         <translation>Zapisz</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="214"/>
+        <location filename="mainwindow.ui" line="209"/>
         <source>Private key:</source>
         <translation>Klucz prywatny:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="267"/>
+        <location filename="mainwindow.ui" line="262"/>
         <source>Input text:</source>
         <translation>Tekst wejściowy:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="287"/>
+        <location filename="mainwindow.ui" line="282"/>
         <source>Load from file</source>
         <translation>Ładuj z pliku</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="303"/>
+        <location filename="mainwindow.ui" line="298"/>
         <location filename="mainwindow.cpp" line="199"/>
         <source>Encrypt</source>
         <translation>Zaszyfruj</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="312"/>
+        <location filename="mainwindow.ui" line="307"/>
         <source>Output text:</source>
         <translation>Tekst wyjściowy:</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="332"/>
+        <location filename="mainwindow.ui" line="327"/>
         <source>Save to file</source>
         <translation>Zapisz do pliku</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="360"/>
+        <location filename="mainwindow.ui" line="355"/>
         <source>&amp;Application</source>
         <oldsource>Application</oldsource>
         <translation>&amp;Aplikacja</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="374"/>
+        <location filename="mainwindow.ui" line="369"/>
         <source>&amp;Generate random key</source>
         <oldsource>Generate random key</oldsource>
         <translation>&amp;Generuj losowy klucz</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="379"/>
+        <location filename="mainwindow.ui" line="374"/>
         <source>&amp;Exit</source>
         <oldsource>Exit</oldsource>
         <translation>&amp;Wyjście</translation>
